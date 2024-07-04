@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Avatar from '@mui/material/Avatar';
@@ -16,21 +16,32 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+
+
+function Copyright(props) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © '}
+      <Link color="inherit" href="https://mui.com/">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
   const router = useRouter();
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(null)
 
-  useEffect(() => {
-    const token = localStorage.getItem('access');
-    if (token) {
-      router.push('/profile');
-    }
-  }, []);
 
   const handleSubmit = async (event) => {
+    setLoading(true)
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     try {
@@ -43,7 +54,10 @@ export default function SignInSide() {
       router.push("/profile");
     } catch (err) {
       setError("Invalid credentials");
+    } finally {
+      setLoading(false);
     }
+  
   };
 
   return (
@@ -116,7 +130,7 @@ export default function SignInSide() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
               </Button>
               <Grid container>
                 <Grid item xs>
@@ -130,6 +144,7 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
               </Grid>
+              <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
         </Grid>

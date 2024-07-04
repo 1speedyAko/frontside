@@ -1,73 +1,25 @@
-'use client'
+'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import axios from 'axios';
-
+import React from 'react';
+import Navbar from './nav/page';
+import Body from './body/page';
 const HomePage = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const accessToken = localStorage.getItem('access');
-        if (!accessToken) {
-          setIsAuthenticated(false);
-          return;
-        }
-
-        const response = await axios.get('http://localhost:8000/auth/users/me/', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        setUser(response.data);
-        setIsAuthenticated(true);
-      } catch (error) {
-        setIsAuthenticated(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('access');
-    localStorage.removeItem('refresh');
-    setIsAuthenticated(false);
-    setUser(null);
-    router.push('/login');
-  };
-
   return (
-    <div className="container mx-auto p-4">
-      
-      {isAuthenticated ? (
-        <div>
-          <p className="mt-4">Hello, {user ? user.email : 'User'}!</p>
-          <button onClick={handleLogout} className="btn mt-4 bg-red-500 text-white p-2">
-            Logout
-          </button>
+    <div className="relative h-screen w-full">
+      <div className="absolute inset-0 ">
+        <img
+          src="https://th.bing.com/th/id/R.21f1a301c64fa08c773ba79e9dbfb24e?rik=apQpyOLEIExj%2bw&riu=http%3a%2f%2fgamification-research.org%2fwp-content%2fuploads%2f2017%2f11%2fVirtual-Money-768x432.jpg&ehk=FCl0kDQAWkOdqaDmwDqyVv8B0doW2LjaHFRTPSX5x8M%3d&risl=&pid=ImgRaw&r=0"
+          alt="Background"
+          className="w-full h-full object-cover "
+        />
+        <div className="absolute inset-0 bg-green-300 opacity-50"></div>
+      </div>
+      <div className="relative z-10">
+        <Navbar />
+        <div className="container mx-auto p-4">
+          <Body/>
         </div>
-      ) : (
-        
-        <div className=" mt-4">
-          
-         <div className='flex justify-end'>
-        
-          <Link href="/login" legacyBehavior>
-            <a className="btn mr-4 border-primary border-2">Sign In</a>
-          </Link>
-          <Link href="/register" legacyBehavior>
-            <a className="btn border-primary border-2">Sign Up</a>
-          </Link>
-         </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 };
