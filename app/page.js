@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import Navbar from './nav/page';
-import Body from './body/page';
+import Navbar from '../app/nav/page';
+import Body from '../app/body/page';
 const HomePage = () => {
   return (
     <div className="relative h-screen w-full">
