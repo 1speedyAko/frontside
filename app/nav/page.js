@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
+import {CircularProgress} from "@nextui-org/react";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -49,15 +50,15 @@ const Navbar = () => {
       <div className="flex items-center justify-between flex-wrap">
         <div className="flex items-center flex-shrink-0 mr-6">
           <Link href="/" legacyBehavior>
-            <a className="text-xl font-bold">Brand</a>
+            <a className="text-6xl font-bold text-gold">Brand</a>
           </Link>
         </div>
-        <div className="block lg:hidden">
+        <div className="block lg:hidden text-xl">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center px-3 py-2 border rounded text-gray-700 border-gray-700 hover:text-gray-900 hover:border-gray-900"
+            className="flex items-center px-3 py-2 border rounded text-gray-700 border-gray-200 hover:text-blue-500 hover:border-gray-900"
           >
-            <svg className="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <svg className="fill-current h-3 w-3 text-gold " viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <title>Menu</title>
               <path d="M0 3h20v2H0zM0 9h20v2H0zM0 15h20v2H0z" />
             </svg>
@@ -80,22 +81,22 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="text-sm lg:flex-grow lg:flex lg:justify-end">
-              <div className="block lg:hidden bg-white absolute right-0 mr-6 mt-2 py-2 rounded shadow-lg">
+              <div className="block lg:hidden bg-ebony absolute right-0 mr-6 mt-2 py-2 rounded  border-gray-200 hover:text-blue-500 hover:border-gray-900 shadow-lg">
                 <Link href="/login" legacyBehavior>
-                  <a className="block text-gray-700 px-4 py-2 mt-2 text-xl hover:bg-gray-200">Sign In</a>
+                  <a className="block text-blue-500 px-4 py-2 mt-2 text-xl hover:bg-gray-200">Sign In</a>
                 </Link>
                 <Link href="/register" legacyBehavior>
-                  <a className="block text-gray-700 px-4 py-2 mt-2 text-xl hover:bg-gray-200">Sign Up</a>
+                  <a className="block text-blue-500 px-4 py-2 mt-2 text-xl hover:bg-gray-200">Sign Up</a>
                 </Link>
               </div>
               <div className="hidden lg:block">
-                <Link href="/login" legacyBehavior>
-                  <a className="btn mr-4 mt-4 lg:mt-0 border-secondary border-4 border-yellow p-2 rounded text-xl hover:bg-gray-200">
+                <Link href="/login" legacyBehavior >
+                  <a className="btn  mr-4 mt-4 lg:mt-0 border-indigo-600 border-4  p-2 rounded text-xl hover:bg-gray-200">
                     Sign In
                   </a>
                 </Link>
-                <Link href="/register" legacyBehavior>
-                  <a className="btn mt-4 lg:mt-0 border-primary border-4 border-yellow p-2 rounded text-xl hover:bg-gray-200">
+                <Link href="/register" legacyBehavior >
+                  <a className="btn mt-4 lg:mt-0 border-indigo-600  border-4  p-2 rounded text-xl hover:bg-gray-200">
                     Sign Up
                   </a>
                 </Link>

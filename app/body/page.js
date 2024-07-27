@@ -1,18 +1,33 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ReactTyped } from "react-typed";
+import { ReactTyped } from 'react-typed';
+import Spinner from '../spinner/page'; 
+import { roboto } from '../_app';
 
 const Body = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a data fetch
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
-    <div className="w-full flex flex-col lg:flex-row p-4">
+    <div className={`${roboto.className} w-full flex flex-col lg:flex-row p-4`}>
       <div className="w-full lg:w-1/2 p-4">
-        <p className="text-lg">
-          lorem ipsum {' '}
-          <ReactTyped
-          strings={['lorem ipsum dolisad saldnsad jsadksad']} typeSpeed={100} loop 
-          />
+        <p className="text-4xl text-blue-500">
+          lorem ipsum{' '}
+          <ReactTyped strings={['lorem ipsum dolisad saldnsad jsadksad']} typeSpeed={100} loop />
         </p>
       </div>
       <div className="w-full lg:w-1/2 flex justify-center items-center p-4">

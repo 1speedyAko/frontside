@@ -3,5 +3,20 @@
 @tailwind utilities;
 
 .btn{
-  @apply   rounded-full py-2 px-3 uppercase text-xs font-bold cursor-pointer text-yellow-300
+  @apply   rounded-full py-2 px-3 uppercase text-xs font-bold cursor-pointer text-indigo-600
+}
+
+.word{
+  @apply text-center
+}
+
+.prime{
+  @apply text-gold
+
+}
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
 }
