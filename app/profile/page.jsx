@@ -1,86 +1,96 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Link from 'next/link';
+import Link from "next/link";
+import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import Spinner from "../spinner/page";
-import { Roboto } from "@next/font/google";
 import { roboto } from "../_app";
+import Spinner from "../spinner/page";
+import { fetchUserDetails, fetchFreeOdds, fetchPremiumPicks } from '../services/page';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const [previousGames, setPreviousGames] = useState([]);
-  const [todaysPicks, setTodaysPicks] = useState([]);
+  const [todaysFreePicks, setTodaysFreePicks] = useState([]);
+  const [premiumPicks, setPremiumPicks] = useState([]);
   const [isPremium, setIsPremium] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const token = localStorage.getItem('access');
+    if (!token) {
+      // Redirect to login or handle unauthenticated state
+      window.location.href = '/login';
+      return;
+    }
+
+    const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem('access');
-        if (!accessToken) {
-          return;
+        setLoading(true);
+        
+        const userResponse = await fetchUserDetails(token);
+        setUser(userResponse.data);
+        setIsPremium(userResponse.data.is_premium);
+
+        const freeOddsResponse = await fetchFreeOdds(token);
+        setTodaysFreePicks(freeOddsResponse.data);
+
+        if (userResponse.data.is_premium) {
+          const premiumPicksResponse = await fetchPremiumPicks(token);
+          setPremiumPicks(premiumPicksResponse.data);
         }
 
-        const userResponse = await axios.get('http://localhost:8000/auth/users/me/', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setUser(userResponse.data);
-
-        setIsPremium(userResponse.data.isPremium);
-
-        const previousGamesResponse = await axios.get('http://localhost:8000/api/previous-games/', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setPreviousGames(previousGamesResponse.data);
-
-        const todaysPicksResponse = await axios.get('http://localhost:8000/api/todays-picks/', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setTodaysPicks(todaysPicksResponse.data);
       } catch (error) {
-        console.error("Error fetching user data or tables data:", error);
+        console.error('Error fetching data:', error);
+        
+        window.location.href = '/login';  
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserData();
-  }, []);
+    fetchData();
+  }, []);  
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    
+  };
 
   if (loading) {
-    return <Spinner />;
+    return <Spinner/>  
   }
 
   return (
-    <div
-      className={`${roboto.className} min-h-screen bg-ebony`}
-    >
+    <div className={`${roboto.className} min-h-screen bg-ebony`}>
       <div className="rounded-lg p-8 max-w-4xl mx-auto">
-        <h1 className={`text-2xl font-bold prime`}>Welcome, {user ? user.email : 'User'}!</h1>
+        <div className="flex justify-between items-center">
+          <h1 className={`text-2xl font-bold prime`}>Welcome, {user ? user.email : 'User'}!</h1>
+          <button
+            onClick={logout}
+            className="bg-red-500 text-white py-2 px-4 rounded-lg flex items-center hover:bg-red-600"
+          >
+            <span className="mr-2"><i className="fas fa-sign-out-alt"></i></span>
+            Logout
+          </button>
+        </div>
         <div className="mt-10">
-          <h2 className="text-xl font-semibold text-center text-indigo-600">Previous Picks</h2>
+          <h2 className="text-xl font-semibold text-center text-indigo-600">Free Odds</h2>
           <table className="min-w-full rounded-lg border border-gray-200 mt-2 mx-4">
             <thead>
-              <tr>
-                <th className="py-3 px-4 border-b rounded-tl-lg">Date</th>
-                <th className="py-3 px-4 border-b">Game</th>
-                <th className="py-3 px-4 border-b rounded-tr-lg">Score</th>
+              <tr className="secondary">
+                <th className="py-3 px-4 border-b rounded-tl-lg">Match</th>
+                <th className="py-3 px-4 border-b">Time</th>
+                <th className="py-3 px-4 border-b">Pick</th>
+                <th className="py-3 px-4 border-b rounded-tr-lg">Odds</th>
               </tr>
             </thead>
             <tbody>
-              {previousGames.map((game, index) => (
-                <tr key={index} className="text-grey-300">
-                  <td className="py-2 px-4 border-b">{game.date}</td>
-                  <td className="py-2 px-4 border-b">{game.name}</td>
-                  <td className="py-2 px-4 border-b">{game.score}</td>
+              {todaysFreePicks.map((game, index) => (
+                <tr key={index} className="secondary">
+                  <td className="py-2 px-4 border-b">{game.match}</td>
+                  <td className="py-2 px-4 border-b">{new Date(game.time).toLocaleDateString()}</td>
+                  <td className="py-2 px-4 border-b">{game.pick}</td>
+                  <td className="py-2 px-4 border-b">{game.odd}</td>
                 </tr>
               ))}
             </tbody>
@@ -97,10 +107,10 @@ const Profile = () => {
                 </tr>
               </thead>
               <tbody>
-                {todaysPicks.map((pick, index) => (
+                {premiumPicks.map((pick, index) => (
                   <tr key={index}>
-                    <td className="py-2 px-4 border-b">{pick.name}</td>
-                    <td className="py-2 px-4 border-b">{pick.details}</td>
+                    <td className="py-2 px-4 border-b">{pick.match}</td>
+                    <td className="py-2 px-4 border-b">{pick.pick}</td>
                   </tr>
                 ))}
               </tbody>
@@ -108,7 +118,7 @@ const Profile = () => {
           </div>
           {!isPremium && (
             <div className="absolute inset-0 flex justify-center items-center bg-white bg-opacity-75 rounded-lg">
-              <Link href="/go-premium" legacyBehavior>
+              <Link href="/cards" legacyBehavior>
                 <a className="bg-yellow-500 text-white py-2 px-4 rounded-lg flex items-center hover:bg-yellow-600">
                   <span className="mr-2"><i className="fas fa-crown"></i></span>
                   Go Premium

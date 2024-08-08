@@ -3,11 +3,15 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import Spinner from "../spinner/page";
 
 export default function SignUp() {
   const router = useRouter();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -93,31 +97,43 @@ export default function SignUp() {
                 placeholder="Email address"
               />
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="password" className="sr-only">Password</label>
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={ passwordVisible ? 'text':'password'}
                 required
                 value={formData.password}
                 onChange={handleInputChange}
                 className="appearance rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
+              <span className="absolute right-3 bottom-3 cursor-pointer"
+                onClick={()=>setPasswordVisible(!passwordVisible)}
+              >
+                {passwordVisible ? <AiOutlineEyeInvisible/> : <AiOutlineEye/>}
+              </span>
             </div>
-            <div>
+            
+            <div className="relative">
               <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
               <input
                 id="confirmPassword"
                 name="confirmPassword"
-                type="password"
+                type= {confirmPasswordVisible ? 'text' : 'password'}
                 required
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 className="rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Confirm Password"
               />
+              
+              <span className="absolute bottom-3 right-3 cursor-pointer "
+                onClick={()=>setConfirmPasswordVisible(!confirmPasswordVisible)}
+              >
+                {confirmPasswordVisible ? <AiOutlineEyeInvisible/> : <AiOutlineEye/>}
+              </span>
             </div>
           </div>
           {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}

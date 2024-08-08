@@ -17,7 +17,7 @@ export default function PasswordReset() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("http://localhost:8000/users/auth/password/reset/", {
+      await axios.post("http://localhost:8000/users/auth/users/reset_password/", {
         email: email,
       });
       setMessage("Password reset link has been sent to your email.");
@@ -35,7 +35,7 @@ export default function PasswordReset() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold prime">
-            Reset your password
+            Reset password
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handlePasswordReset}>
@@ -49,7 +49,7 @@ export default function PasswordReset() {
                 required
                 value={email}
                 onChange={handleInputChange}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
             </div>

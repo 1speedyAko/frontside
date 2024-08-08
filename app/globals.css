@@ -14,6 +14,12 @@
   @apply text-gold
 
 }
+.primary{
+  @apply text-indigo-600
+}
+.secondary{
+  @apply text-gray-200
+}
 body {
   margin: 0;
   padding: 0;

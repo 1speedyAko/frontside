@@ -4,10 +4,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import Spinner from "../spinner/page";
 
 export default function SignInSide() {
   const router = useRouter();
   const [error, setError] = useState(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formdata, setFormdata] = useState({
     email: '',
@@ -39,17 +42,21 @@ export default function SignInSide() {
     }
   };
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-ebony py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold prime">
-            Sign in 
+            Sign in
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
-            <div className=" gap-4 mb-10">
+            <div className="gap-4 mb-10">
               <label htmlFor="email-address" className="sr-only">Email address</label>
               <input
                 id="email-address"
@@ -63,12 +70,12 @@ export default function SignInSide() {
                 placeholder="Email address"
               />
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="password" className="sr-only">Password</label>
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={passwordVisible ? 'text' : 'password'}
                 autoComplete="current-password"
                 required
                 value={formdata.password}
@@ -76,6 +83,12 @@ export default function SignInSide() {
                 className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
+              <span
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+              >
+                {passwordVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </span>
             </div>
           </div>
           {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}
@@ -95,10 +108,10 @@ export default function SignInSide() {
             </button>
           </div>
           <div className="text-sm">
-              <Link href="/password-reset" className="font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot password? 
-              </Link>
-            </div>
+            <Link href="/password-reset" className="font-medium text-indigo-600 hover:text-indigo-500">
+              Forgot password?
+            </Link>
+          </div>
         </form>
       </div>
     </div>
