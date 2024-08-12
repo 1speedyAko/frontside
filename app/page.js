@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Navbar from '../app/nav/page';
-import Body from '../app/body/page';
+import Body from './body/page';
 const HomePage = () => {
   return (
     <div className="relative h-screen w-full bg-ebony">
