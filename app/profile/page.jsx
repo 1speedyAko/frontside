@@ -42,7 +42,7 @@ const Profile = () => {
       } catch (error) {
         console.error('Error fetching data:', error);
         
-        window.location.href = '/login';  
+        window.location.href = '/';  
       } finally {
         setLoading(false);
       }
@@ -52,7 +52,9 @@ const Profile = () => {
   }, []);  
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('access');
+    localStorage.removeItem('refresh')
+    window.location.href = '/'
     
   };
 
@@ -67,7 +69,7 @@ const Profile = () => {
           <h1 className={`text-2xl font-bold prime`}>Welcome, {user ? user.email : 'User'}!</h1>
           <button
             onClick={logout}
-            className="bg-red-500 text-white py-2 px-4 rounded-lg flex items-center hover:bg-red-600"
+            className="bg-blue-500 text-white py-2 px-4 rounded-lg flex items-center hover:bg-red-600"
           >
             <span className="mr-2"><i className="fas fa-sign-out-alt"></i></span>
             Logout
@@ -86,7 +88,7 @@ const Profile = () => {
             </thead>
             <tbody>
               {todaysFreePicks.map((game, index) => (
-                <tr key={index} className="secondary">
+                <tr key={index} className="secondary text-center">
                   <td className="py-2 px-4 border-b">{game.match}</td>
                   <td className="py-2 px-4 border-b">{new Date(game.time).toLocaleDateString()}</td>
                   <td className="py-2 px-4 border-b">{game.pick}</td>
@@ -96,21 +98,27 @@ const Profile = () => {
             </tbody>
           </table>
         </div>
-        <div className="mt-10 relative">
-          <h2 className="text-xl font-semibold">Today's Picks</h2>
-          <div className={`w-90 bg-white border border-gray-200 mt-2 rounded-lg mx-4 ${!isPremium && 'filter blur-sm'}`}>
+        <p className="secondary mt-5 ml-4"> For  best expirience, join  the premium club to get guaranteed 10+ odds  three times a week. </p>
+        <h2 className="text-xl text-center mt-8 font-semibold primary">Today's Picks</h2>
+        <div className="mt-5 relative ml-7">
+          
+          <div className={`w-90 bg-white border border-gray-200 mt-2 rounded-lg mx-4 ${!isPremium && 'filter blur-lg'}`}>
             <table className="min-w-full rounded-lg">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border-b rounded-tl-lg">Pick</th>
-                  <th className="py-2 px-4 border-b rounded-tr-lg">Details</th>
+                <th className="py-3 px-4 border-b rounded-tl-lg">Match</th>
+                <th className="py-3 px-4 border-b">Time</th>
+                <th className="py-3 px-4 border-b">Pick</th>
+                <th className="py-3 px-4 border-b rounded-tr-lg">Odds</th>
                 </tr>
               </thead>
               <tbody>
-                {premiumPicks.map((pick, index) => (
+                {premiumPicks.map((game, index) => (
                   <tr key={index}>
-                    <td className="py-2 px-4 border-b">{pick.match}</td>
-                    <td className="py-2 px-4 border-b">{pick.pick}</td>
+                    <td className="py-2 px-4 border-b">{game.match}</td>
+                    <td className="py-2 px-4 border-b">{new Date(game.time).toLocaleDateString()}</td>
+                    <td className="py-2 px-4 border-b">{game.pick}</td>
+                    <td className="py-2 px-4 border-b">{game.odd}</td>
                   </tr>
                 ))}
               </tbody>
@@ -118,7 +126,7 @@ const Profile = () => {
           </div>
           {!isPremium && (
             <div className="absolute inset-0 flex justify-center items-center bg-white bg-opacity-75 rounded-lg">
-              <Link href="/cards" legacyBehavior>
+              <Link href="/pricing" legacyBehavior>
                 <a className="bg-yellow-500 text-white py-2 px-4 rounded-lg flex items-center hover:bg-yellow-600">
                   <span className="mr-2"><i className="fas fa-crown"></i></span>
                   Go Premium

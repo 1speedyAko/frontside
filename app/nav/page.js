@@ -50,7 +50,7 @@ const Navbar = () => {
       <div className="flex items-center justify-between flex-wrap">
         <div className="flex items-center flex-shrink-0 mr-6">
           <Link href="/" legacyBehavior>
-            <a className="text-6xl font-bold text-gold">Brand</a>
+            <a className="flex text-2xl font-bold text-gold mt-10 mx-2">Predictorious <span className='secondary'> zone</span></a>
           </Link>
         </div>
         <div className="block lg:hidden text-xl">
