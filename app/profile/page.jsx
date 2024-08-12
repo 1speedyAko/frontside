@@ -6,7 +6,8 @@ import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { roboto } from "../_app";
 import Spinner from "../spinner/page";
-import { fetchUserDetails, fetchFreeOdds, fetchPremiumPicks } from '../services/page';
+
+const API_URL = 'http://localhost:8000/api';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -18,30 +19,64 @@ const Profile = () => {
   useEffect(() => {
     const token = localStorage.getItem('access');
     if (!token) {
-      // Redirect to login or handle unauthenticated state
       window.location.href = '/login';
       return;
     }
+
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/users/me/`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+        throw error;
+      }
+    };
+
+    const fetchFreeOdds = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/games/free-odds/`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching free odds:', error);
+        throw error;
+      }
+    };
+
+    const fetchPremiumPicks = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/games/premium-picks/`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching premium picks:', error);
+        throw error;
+      }
+    };
 
     const fetchData = async () => {
       try {
         setLoading(true);
         
-        const userResponse = await fetchUserDetails(token);
-        setUser(userResponse.data);
-        setIsPremium(userResponse.data.is_premium);
+        const userResponse = await fetchUserDetails();
+        setUser(userResponse);
+        setIsPremium(userResponse.is_premium);
 
-        const freeOddsResponse = await fetchFreeOdds(token);
-        setTodaysFreePicks(freeOddsResponse.data);
+        const freeOddsResponse = await fetchFreeOdds();
+        setTodaysFreePicks(freeOddsResponse);
 
-        if (userResponse.data.is_premium) {
-          const premiumPicksResponse = await fetchPremiumPicks(token);
-          setPremiumPicks(premiumPicksResponse.data);
+        if (userResponse.is_premium) {
+          const premiumPicksResponse = await fetchPremiumPicks();
+          setPremiumPicks(premiumPicksResponse);
         }
 
       } catch (error) {
         console.error('Error fetching data:', error);
-        
         window.location.href = '/';  
       } finally {
         setLoading(false);
@@ -55,7 +90,6 @@ const Profile = () => {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh')
     window.location.href = '/'
-    
   };
 
   if (loading) {
@@ -75,6 +109,8 @@ const Profile = () => {
             Logout
           </button>
         </div>
+
+        {/* Free Odds Section */}
         <div className="mt-10">
           <h2 className="text-xl font-semibold text-center text-indigo-600">Free Odds</h2>
           <table className="min-w-full rounded-lg border border-gray-200 mt-2 mx-4">
@@ -98,18 +134,19 @@ const Profile = () => {
             </tbody>
           </table>
         </div>
-        <p className="secondary mt-5 ml-4"> For  best expirience, join  the premium club to get guaranteed 10+ odds  three times a week. </p>
-        <h2 className="text-xl text-center mt-8 font-semibold primary">Today's Picks</h2>
+
+        {/* Premium Picks Section */}
+        <p className="secondary mt-5 ml-4">For best experience, join the premium club to get guaranteed 10+ odds three times a week.</p>
+        <h2 className="text-xl text-center mt-8 font-semibold primary">Todays Picks</h2>
         <div className="mt-5 relative ml-7">
-          
           <div className={`w-90 bg-white border border-gray-200 mt-2 rounded-lg mx-4 ${!isPremium && 'filter blur-lg'}`}>
             <table className="min-w-full rounded-lg">
               <thead>
                 <tr>
-                <th className="py-3 px-4 border-b rounded-tl-lg">Match</th>
-                <th className="py-3 px-4 border-b">Time</th>
-                <th className="py-3 px-4 border-b">Pick</th>
-                <th className="py-3 px-4 border-b rounded-tr-lg">Odds</th>
+                  <th className="py-3 px-4 border-b rounded-tl-lg">Match</th>
+                  <th className="py-3 px-4 border-b">Time</th>
+                  <th className="py-3 px-4 border-b">Pick</th>
+                  <th className="py-3 px-4 border-b rounded-tr-lg">Odds</th>
                 </tr>
               </thead>
               <tbody>

@@ -1,6 +1,11 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
+module.exports = {
+  root: true,
+  "extends": ["next", "next/core-web-vitals"],
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  rules: {
+    // Your custom rules here
+  },
 }
-
-module.exports = nextConfig
