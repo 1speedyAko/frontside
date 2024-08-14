@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         {/* Cryptomus domain verification meta tag */}
-        <meta name="cryptomus-verification" content="d4150844" />
+        <meta name="cryptomus" content="d4150844" />
       </Head>
       <div className={roboto.className}>
         <Component {...pageProps} />
