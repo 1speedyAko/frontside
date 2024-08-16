@@ -1,20 +1,13 @@
-"use client";
-
 import React from 'react';
-
-import '../app/globals.css';
 
 function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+        <meta name="cryptomus" content="fea1d58b" />
       </head>
       <body>
-      
-         
-          {children}
-        
+        {children}
       </body>
     </html>
   );

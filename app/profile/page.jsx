@@ -139,7 +139,7 @@ const Profile = () => {
         <p className="secondary mt-5 ml-4">For best experience, join the premium club to get guaranteed 10+ odds three times a week.</p>
         <h2 className="text-xl text-center mt-8 font-semibold primary">Todays Picks</h2>
         <div className="mt-5 relative ml-7">
-          <div className={`w-90 bg-white border border-gray-200 mt-2 rounded-lg mx-4 ${!isPremium && 'filter blur-lg'}`}>
+          <div className={`w-90 bg-white border border-gray-200 mt-2 rounded-lg mx-4 ${!isPremium && 'filter blur-lg bg-white'}`}>
             <table className="min-w-full rounded-lg">
               <thead>
                 <tr>
@@ -165,7 +165,7 @@ const Profile = () => {
             <div className="absolute inset-0 flex justify-center items-center bg-white bg-opacity-75 rounded-lg">
               <Link href="/pricing" legacyBehavior>
                 <a className="bg-yellow-500 text-white py-2 px-4 rounded-lg flex items-center hover:bg-yellow-600">
-                  <span className="mr-2"><i className="fas fa-crown"></i></span>
+                  <span className="mr-2"><i className="fas fa-crown text-yellow-500"></i></span>
                   Go Premium
                 </a>
               </Link>
