@@ -1,6 +1,6 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 .btn{
   @apply   rounded-full py-2 px-3 uppercase text-xs font-bold cursor-pointer text-indigo-600
