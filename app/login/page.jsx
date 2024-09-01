@@ -106,6 +106,12 @@ export default function SignInSide() {
               Sign In
             </button>
           </div>
+          <div>
+            <Link href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+                Dont have an account? Sign up here
+            </Link>
+          </div>
+            
           <div className="text-sm">
             <Link href="/password-reset" className="font-medium text-indigo-600 hover:text-indigo-500">
               Forgot password?

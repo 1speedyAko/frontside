@@ -1,11 +1,12 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from "react";
 import Spinner from "@/app/spinner/page";
 import { roboto } from "@/app/_app";
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api';
+// Access the API URL from environment variables
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Premium = () => {
   const [user, setUser] = useState(null);
@@ -69,7 +70,7 @@ const Premium = () => {
   }, []);  
 
   if (loading) {
-    return <Spinner/>  
+    return <Spinner />;
   }
 
   return (

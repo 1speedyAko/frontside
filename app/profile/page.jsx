@@ -6,8 +6,7 @@ import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { roboto } from "../_app";
 import Spinner from "../spinner/page";
-
-const API_URL = 'http://localhost:8000/api';
+import Nav from "../top/nav";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -15,6 +14,9 @@ const Profile = () => {
   const [premiumPicks, setPremiumPicks] = useState([]);
   const [isPremium, setIsPremium] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Access the API URL from environment variables
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const token = localStorage.getItem('access');
@@ -62,7 +64,7 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         const userResponse = await fetchUserDetails();
         setUser(userResponse);
         setIsPremium(userResponse.is_premium);
@@ -84,12 +86,12 @@ const Profile = () => {
     };
 
     fetchData();
-  }, []);  
+  }, [API_URL]);
 
   const logout = () => {
     localStorage.removeItem('access');
-    localStorage.removeItem('refresh')
-    window.location.href = '/'
+    localStorage.removeItem('refresh');
+    window.location.href = '/';
   };
 
   if (loading) {
@@ -98,16 +100,13 @@ const Profile = () => {
 
   return (
     <div className={`${roboto.className} min-h-screen bg-ebony`}>
+      {/* Include the Nav component */}
+      <Nav />
+
       <div className="rounded-lg p-8 max-w-4xl mx-auto">
+        {/* Profile Content */}
         <div className="flex justify-between items-center">
-          <h1 className={`text-2xl font-bold prime`}>Welcome, {user ? user.email : 'User'}!</h1>
-          <button
-            onClick={logout}
-            className="bg-blue-500 text-white py-2 px-4 rounded-lg flex items-center hover:bg-red-600"
-          >
-            <span className="mr-2"><i className="fas fa-sign-out-alt"></i></span>
-            Logout
-          </button>
+          {/* Additional content can go here */}
         </div>
 
         {/* Free Odds Section */}
@@ -137,7 +136,7 @@ const Profile = () => {
 
         {/* Premium Picks Section */}
         <p className="secondary mt-5 ml-4">For best experience, join the premium club to get guaranteed 10+ odds three times a week.</p>
-        <h2 className="text-xl text-center mt-8 font-semibold primary">Todays Picks</h2>
+        <h2 className="text-xl text-center mt-8 font-semibold primary">Today's Picks</h2>
         <div className="mt-5 relative ml-7">
           <div className={`w-90 bg-white border border-gray-200 mt-2 rounded-lg mx-4 ${!isPremium && 'filter blur-lg bg-white'}`}>
             <table className="min-w-full rounded-lg">

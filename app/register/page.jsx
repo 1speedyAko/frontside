@@ -1,10 +1,10 @@
-"use client";
+'use client'
+
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import Spinner from "../spinner/page";
 
 export default function SignUp() {
   const router = useRouter();
@@ -39,24 +39,25 @@ export default function SignUp() {
       await axios.post("http://localhost:8000/users/auth/users/", {
         email: formData.email,
         password: formData.password,
+        re_password: formData.re_password,
       });
       router.push("/login");
     } catch (err) {
-      setError("Email already exists");
+      setError("Error occurred during sign up");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ebony py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="h-screen flex items-center justify-center bg-ebony px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold prime">
             Sign up here
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSignUp}>
+        <form className="mt-8" onSubmit={handleSignUp}>
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label htmlFor="firstName" className="sr-only">First Name</label>
@@ -97,6 +98,7 @@ export default function SignUp() {
                 placeholder="Email address"
               />
             </div>
+
             <div className="relative">
               <label htmlFor="password" className="sr-only">Password</label>
               <input
@@ -115,7 +117,7 @@ export default function SignUp() {
                 {passwordVisible ? <AiOutlineEyeInvisible/> : <AiOutlineEye/>}
               </span>
             </div>
-            
+
             <div className="relative">
               <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
               <input
@@ -137,20 +139,22 @@ export default function SignUp() {
             </div>
           </div>
           {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}
+          
+          <div>
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-2 px-4 border mt-10 border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              {loading ? "Loading..." : "Sign Up"}
+            </button>
+          </div>
+
           <div className="flex items-center justify-between">
             <div className="text-sm">
               <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
                 Already have an account? Sign in
               </Link>
             </div>
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              {loading ? "Loading..." : "Sign Up"}
-            </button>
           </div>
         </form>
       </div>

@@ -25,9 +25,17 @@ const Body = () => {
   return (
     <div className={`${roboto.className} w-full flex flex-col lg:flex-row p-4`}>
       <div className="w-full lg:w-1/2 p-4">
-        <p className="text-4xl text-blue-500">
-          lorem ipsum{' '}
-          <ReactTyped strings={['lorem ipsum dolisad saldnsad jsadksad']} typeSpeed={100} loop />
+      <p className='prime font-bold text-2xl'>
+       <ReactTyped strings={['Tired of losing bets ! worry no more...']} typeSpeed={100} loop/>
+       </p>
+        <p className="text-lg text-blue-500 mt-5">
+          Welcome to Predictoriouszone.{' '}
+        
+        </p>
+        
+        <p className='secondary mt-5'>
+          We analyze and offer 2+ odds for free, upon signup and also offer 10+ odds across all leagues and sports for our premium members.
+          Join us to win, its great to win.<br/> <span className='prime text-xl mt-7'>Become great !</span>
         </p>
       </div>
       <div className="w-full lg:w-1/2 flex justify-center items-center p-4">
