@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import Spinner from "../spinner/page";
 
+
 export default function SignInSide() {
   const router = useRouter();
   const [error, setError] = useState(null);
@@ -28,8 +29,7 @@ export default function SignInSide() {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/users/auth/jwt/create/", {
-        email: formdata.email,
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/auth/jwt/create/`, {        email: formdata.email,
         password: formdata.password,
       });
       localStorage.setItem("access", response.data.access);
@@ -43,7 +43,7 @@ export default function SignInSide() {
   };
 
   if (loading) {
-    return <Spinner />;
+    return <Spinner/>;
   }
 
   return (

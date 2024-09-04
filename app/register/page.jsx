@@ -35,7 +35,7 @@ export default function SignUp() {
     }
     setLoading(true);
     try {
-      await axios.post("http://localhost:8000/users/auth/users/", {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/auth/users/`, {
         email: formData.email,
         password: formData.password,
         re_password: formData.confirmPassword,
@@ -59,7 +59,7 @@ export default function SignUp() {
         </div>
         <form className="mt-8" onSubmit={handleSignUp}>
           <div className="rounded-md shadow-sm space-y-4">
-            <div>
+            <div className=" gap-4">
               <label htmlFor="email-address" className="sr-only">Email address</label>
               <input
                 id="email-address"
@@ -116,7 +116,7 @@ export default function SignUp() {
             </button>
           </div>
           <div className="flex items-center justify-between">
-            <div className="text-sm">
+            <div className="text-sm mt-6">
               <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
                 Already have an account? Sign in
               </Link>
