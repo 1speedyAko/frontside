@@ -7,6 +7,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import { roboto } from "../_app";
 import Spinner from "../spinner/page";
 import Nav from "../top/nav";
+import Announcements from "../announcement/words";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -99,12 +100,13 @@ const Profile = () => {
   }
 
   return (
-    <div className={`${roboto.className} min-h-screen bg-ebony`}>
+    <div className={`${roboto.className}flex min-h-screen bg-ebony min-w-full w-auto`}>
       {/* Include the Nav component */}
       <Nav />
 
       <div className="rounded-lg p-8 max-w-4xl mx-auto">
         {/* Profile Content */}
+        <Announcements/>
         <div className="flex justify-between items-center">
           {/* Additional content can go here */}
         </div>
@@ -112,6 +114,7 @@ const Profile = () => {
         {/* Free Odds Section */}
         <div className="mt-10">
           <h2 className="text-xl font-semibold text-center text-indigo-600">Free Odds</h2>
+          <div className="w-full">
           <table className="min-w-full rounded-lg border border-gray-200 mt-2 mx-4">
             <thead>
               <tr className="secondary">
@@ -132,6 +135,7 @@ const Profile = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         {/* Premium Picks Section */}

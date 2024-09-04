@@ -13,12 +13,11 @@ export default function SignUp() {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false)
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,7 +38,7 @@ export default function SignUp() {
       await axios.post("http://localhost:8000/users/auth/users/", {
         email: formData.email,
         password: formData.password,
-        re_password: formData.re_password,
+        re_password: formData.confirmPassword,
       });
       router.push("/login");
     } catch (err) {
@@ -48,6 +47,7 @@ export default function SignUp() {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="h-screen flex items-center justify-center bg-ebony px-4 sm:px-6 lg:px-8">
@@ -59,32 +59,6 @@ export default function SignUp() {
         </div>
         <form className="mt-8" onSubmit={handleSignUp}>
           <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <label htmlFor="firstName" className="sr-only">First Name</label>
-              <input
-                id="firstName"
-                name="firstName"
-                type="text"
-                required
-                value={formData.firstName}
-                onChange={handleInputChange}
-                className="rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="First Name"
-              />
-            </div>
-            <div>
-              <label htmlFor="lastName" className="sr-only">Last Name</label>
-              <input
-                id="lastName"
-                name="lastName"
-                type="text"
-                required
-                value={formData.lastName}
-                onChange={handleInputChange}
-                className=" rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Last Name"
-              />
-            </div>
             <div>
               <label htmlFor="email-address" className="sr-only">Email address</label>
               <input
@@ -98,57 +72,49 @@ export default function SignUp() {
                 placeholder="Email address"
               />
             </div>
-
             <div className="relative">
               <label htmlFor="password" className="sr-only">Password</label>
               <input
                 id="password"
                 name="password"
-                type={ passwordVisible ? 'text':'password'}
+                type={passwordVisible ? 'text':'password'}
                 required
                 value={formData.password}
                 onChange={handleInputChange}
-                className="appearance rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
               <span className="absolute right-3 bottom-3 cursor-pointer"
-                onClick={()=>setPasswordVisible(!passwordVisible)}
-              >
+                onClick={()=>setPasswordVisible(!passwordVisible)}>
                 {passwordVisible ? <AiOutlineEyeInvisible/> : <AiOutlineEye/>}
               </span>
             </div>
-
             <div className="relative">
               <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
               <input
                 id="confirmPassword"
                 name="confirmPassword"
-                type= {confirmPasswordVisible ? 'text' : 'password'}
+                type={confirmPasswordVisible ? 'text':'password'}
                 required
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 className="rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Confirm Password"
               />
-              
-              <span className="absolute bottom-3 right-3 cursor-pointer "
-                onClick={()=>setConfirmPasswordVisible(!confirmPasswordVisible)}
-              >
+              <span className="absolute bottom-3 right-3 cursor-pointer"
+                onClick={()=>setConfirmPasswordVisible(!confirmPasswordVisible)}>
                 {confirmPasswordVisible ? <AiOutlineEyeInvisible/> : <AiOutlineEye/>}
               </span>
             </div>
           </div>
           {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}
-          
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border mt-10 border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+              className="group relative w-full flex justify-center py-2 px-4 border mt-10 border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               {loading ? "Loading..." : "Sign Up"}
             </button>
           </div>
-
           <div className="flex items-center justify-between">
             <div className="text-sm">
               <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">

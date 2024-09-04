@@ -74,7 +74,7 @@ const Premium = () => {
   }
 
   return (
-    <div className={`${roboto.className} min-h-screen bg-ebony`}>
+    <div className={`${roboto.className} min-h-screen bg-ebony mx-auto`}>
       <div className="rounded-lg p-8 max-w-4xl mx-auto">
         <div className="flex justify-between items-center">
           <h1 className={`text-2xl font-bold prime`}>Hello, {user ? user.email : 'User'}!</h1>
