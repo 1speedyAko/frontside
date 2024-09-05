@@ -29,7 +29,7 @@ export default function SignInSide() {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/auth/jwt/create/`, {        email: formdata.email,
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/auth/jwt/create/`, {        email: formdata.email,
         password: formdata.password,
       });
       localStorage.setItem("access", response.data.access);

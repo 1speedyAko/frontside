@@ -27,17 +27,20 @@ const CardData = [
   },
 ];
 
-const CenteredCard = () => {
+const Subscriptions = () => {
   const [status, setStatus] = useState(null);
 
   const checkPaymentStatus = async (paymentData) => {
     try {
-      const response = await axios.post('http://localhost:8000/check-payment-status/', paymentData);
-      setStatus(response.data.status || response.data.error);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/subscriptions/create/${paymentData.plan_name}/`
+      );
+      window.location.href = response.data.payment_url;  // Redirect to the CoinPayments checkout page
     } catch (error) {
-      setStatus({ error: 'Failed to check payment status' });
+      setStatus({ error: 'Failed to initiate payment' });
     }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-ebony p-4">
@@ -52,11 +55,12 @@ const CenteredCard = () => {
               <p className="absolute bottom-25 text-gray-400 mb-4">{item.description}</p>
             </div>
             <button 
-              onClick={() => checkPaymentStatus({ order_id: 'unique_order_id_here' })}
+              onClick={() => checkPaymentStatus({ plan_name: item.title })}
               className="bg-blue-500 text-center secondary text-black py-2 px-4 rounded-full font-semibold hover:bg-blue-900"
             >
               Join Now
             </button>
+
           </div>
         ))}
       </div>
@@ -74,4 +78,4 @@ const CenteredCard = () => {
   );
 };
 
-export default CenteredCard;
+export default Subscriptions;
