@@ -6,6 +6,6 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    // Your custom rules here
+    "rules": { "react/no-unescaped-entities": 0 }
   },
 }
