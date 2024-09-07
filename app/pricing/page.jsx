@@ -54,6 +54,9 @@ const Subscriptions = () => {
       window.location.href = response.data.payment_url; // Redirect to CoinPayments checkout page
     } catch (error) {
       setStatus({ error: 'Failed to initiate payment' });
+      setTimeout(() => {
+        setStatus(null)
+      }, 3000);
     }
   };
 
