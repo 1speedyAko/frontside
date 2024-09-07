@@ -3,7 +3,7 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-const DJANGO_API_URL = process.env.NEXT_PUBLIC_API_URL;
+const DJANGO_API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export async function GET(request) {
   const accessToken = request.headers.get('Authorization').split(' ')[1];
