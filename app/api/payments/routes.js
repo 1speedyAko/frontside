@@ -3,7 +3,7 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-const DJANGO_API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
+const DJANGO_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request) {
   const data = await request.json();

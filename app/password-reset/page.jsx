@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+
 export default function PasswordReset() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -17,7 +20,7 @@ export default function PasswordReset() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("http://localhost:8000/users/auth/users/reset_password/", {
+      await axios.post(`${API_URL}/users/auth/users/reset_password/`, {
         email: email,
       });
       setMessage("Password reset link has been sent to your email.");

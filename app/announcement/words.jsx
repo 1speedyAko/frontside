@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import Spinner from "../spinner/page";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const Announcements = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -15,7 +15,6 @@ const Announcements = () => {
     if(!token){
       window.location.href='/login'
     }
-    return
 
     const fetchAnnouncements = async () => {
       try {
