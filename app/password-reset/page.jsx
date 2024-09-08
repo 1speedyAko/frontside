@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
 
 
 export default function PasswordReset() {

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import Spinner from "../spinner/page";
 
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
 
 const Announcements = () => {
   const [announcements, setAnnouncements] = useState([]);
