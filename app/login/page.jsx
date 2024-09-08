@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import Spinner from "../spinner/page";
 
-
+const DJANGO_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL
 export default function SignInSide() {
   const router = useRouter();
   const [error, setError] = useState(null);
@@ -29,7 +29,7 @@ export default function SignInSide() {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_DJANGO_API_URL}/users/auth/jwt/create/`, {        email: formdata.email,
+      const response = await axios.post(`${DJANGO_URL}/users/auth/jwt/create/`, {        email: formdata.email,
         password: formdata.password,
       });
       localStorage.setItem("access", response.data.access);

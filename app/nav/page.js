@@ -6,6 +6,8 @@ import Link from 'next/link';
 import axios from 'axios';
 import {CircularProgress} from "@nextui-org/react";
 
+const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
+
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
@@ -21,7 +23,7 @@ const Navbar = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost:8000/auth/users/me/', {
+        const response = await axios.get(`${API_URL}/auth/users/me/`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

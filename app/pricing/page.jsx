@@ -26,6 +26,8 @@ const CardData = [
   },
 ];
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
 const Subscriptions = () => {
   const [plans, setPlans] = useState([]);
   const [status, setStatus] = useState(null);
@@ -33,7 +35,7 @@ const Subscriptions = () => {
   // Fetch subscription plans from the backend
   const fetchSubscriptionPlans = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`);
+      const response = await fetch(`${API_URL}/subscriptions/plans/`);
       const data = await response.json();
       setPlans(data); // Store the plans in the state
     } catch (error) {

@@ -6,7 +6,7 @@ import { roboto } from "@/app/_app";
 import axios from 'axios';
 
 // Access the API URL from environment variables
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
 
 const Premium = () => {
   const [user, setUser] = useState(null);
