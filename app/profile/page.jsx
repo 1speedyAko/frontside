@@ -17,7 +17,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   // Access the API URL from environment variables
-  const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const token = localStorage.getItem('access');

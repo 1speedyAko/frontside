@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
+const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL
 export default function SignUp() {
   const router = useRouter();
   const [error, setError] = useState(null);
@@ -35,7 +36,7 @@ export default function SignUp() {
     }
     setLoading(true);
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/auth/users/`, {
+      await axios.post(`${API_URL}/users/auth/users/`, {
         email: formData.email,
         password: formData.password,
         re_password: formData.confirmPassword,
