@@ -60,7 +60,7 @@ const Premium = () => {
         console.error('Error fetching data:', error);
         
         // Comment out the redirect on error for development
-        // window.location.href = '/';  
+        window.location.href = '/';  
       } finally {
         setLoading(false);
       }

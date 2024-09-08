@@ -11,9 +11,17 @@ const Announcements = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem('access')
+    if(!token){
+      window.location.href='/login'
+    }
+    return
+
     const fetchAnnouncements = async () => {
       try {
-        const response = await axios.get(`${API_URL}/games/announcement/`);
+        const response = await axios.get(`${API_URL}/games/announcement/`,{
+          headers:{Authorization:`Bearer ${token}`}
+        });
         setAnnouncements(response.data);
       } catch (error) {
         console.error('Error fetching announcements:', error);
@@ -35,8 +43,8 @@ const Announcements = () => {
       <ul className="list-disc list-inside">
         {announcements.map((announcement) => (
           <li key={announcement.id} className="mb-2">
-            <h3 className="text-xl font-bold">{announcement.title}</h3>
-            <p>{announcement.word}</p>
+            <h3 className="text-xl font-bold primary">{announcement.title}</h3>
+            <p className="text-white">{announcement.word}</p>
           </li>
         ))}
       </ul>
