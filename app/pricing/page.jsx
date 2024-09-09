@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 
 // Static fallback data
 const CardData = [
@@ -27,44 +27,46 @@ const CardData = [
   },
 ];
 
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Subscriptions = () => {
   const [plans, setPlans] = useState([]);
   const [status, setStatus] = useState(null);
-  
-  // Fetch the JWT token from localStorage
-  const token = localStorage.getItem('access');
-  
+  const [token, setToken] = useState(null);
+
   // Fetch subscription plans from the backend
-  const fetchSubscriptionPlans = async () => {
+  const fetchSubscriptionPlans = useCallback(async (fetchedToken) => {
     try {
       const response = await fetch(`${API_URL}/subscriptions/plans/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${fetchedToken}` }
       });
       const data = await response.json();
       setPlans(data); // Store the plans in the state
     } catch (error) {
       console.error('Error fetching subscription plans:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchSubscriptionPlans(); // Fetch plans when the component mounts
-  }, []);
+    // Check if we are in the client-side environment
+    if (typeof window !== 'undefined') {
+      const savedToken = localStorage.getItem('access');
+      setToken(savedToken); // Save token in state
+      if (savedToken) {
+        fetchSubscriptionPlans(savedToken); // Fetch plans when the token is available
+      }
+    }
+  }, [fetchSubscriptionPlans]);
 
   // Handle the payment initiation process
   const checkPaymentStatus = async (paymentData) => {
     try {
       const response = await axios.post(
-        `${API_URLL}/subscriptions/create/${paymentData.plan_name}/`,
+        `${API_URL}/subscriptions/create/${paymentData.plan_name}/`,
         {}, // Pass any required data in the body if needed
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Use token from state
           },
         }
       );
@@ -77,6 +79,7 @@ const Subscriptions = () => {
       }, 3000); // Clear the status message after 3 seconds
     }
   };
+
   // Display the plans (either from backend or static fallback)
   const renderPlans = (plans.length > 0 ? plans : CardData).map((item, index) => (
     <div
