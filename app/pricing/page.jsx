@@ -60,26 +60,29 @@ const Subscriptions = () => {
 
   // Handle the payment initiation process
   const checkPaymentStatus = async (paymentData) => {
-    try {
-      const response = await axios.post(
-        `${API_URL}/subscriptions/create/${paymentData.plan_name}/`,
-        {}, // Pass any required data in the body if needed
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Use token from state
-          },
-        }
-      );
-      // Redirect to checkout page (payment URL)
-      window.location.href = response.data.payment_url;
-    } catch (error) {
-      setStatus({ error: 'Failed to initiate payment' });
-      setTimeout(() => {
-        setStatus(null);
-      }, 3000); // Clear the status message after 3 seconds
-    }
-  };
+  try {
+    console.log(`Initiating payment for plan: ${paymentData.plan_name}`);
+    const response = await axios.post(
+      `${API_URL}/subscriptions/create/${paymentData.plan_name}/`,
+      {}, // Pass any required data in the body if needed
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log('Payment response:', response.data); // Log the response
+    window.location.href = response.data.payment_url;
+  } catch (error) {
+    console.error('Payment initiation failed:', error); // Log the full error
+    setStatus({ error: 'Failed to initiate payment' });
+    setTimeout(() => {
+      setStatus(null);
+    }, 3000);
+  }
+};
 
+     
   // Display the plans (either from backend or static fallback)
   const renderPlans = (plans.length > 0 ? plans : CardData).map((item, index) => (
     <div
