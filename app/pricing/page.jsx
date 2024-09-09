@@ -33,15 +33,17 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const Subscriptions = () => {
   const [plans, setPlans] = useState([]);
   const [status, setStatus] = useState(null);
-
-  const token = localStorage.getItem('access')
-
-
+  
+  // Fetch the JWT token from localStorage
+  const token = localStorage.getItem('access');
+  
   // Fetch subscription plans from the backend
   const fetchSubscriptionPlans = async () => {
     try {
-      const response = await fetch(`${API_URL}/subscriptions/plans/`,{
-        headers:{Authorization:`Bearer ${token}`}
+      const response = await fetch(`${API_URL}/subscriptions/plans/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = await response.json();
       setPlans(data); // Store the plans in the state
@@ -51,30 +53,30 @@ const Subscriptions = () => {
   };
 
   useEffect(() => {
-    fetchSubscriptionPlans();
+    fetchSubscriptionPlans(); // Fetch plans when the component mounts
   }, []);
 
   // Handle the payment initiation process
   const checkPaymentStatus = async (paymentData) => {
     try {
       const response = await axios.post(
-        `${API_URL}/subscriptions/create/${paymentData.plan_name}/`,
-        {},
+        `${API_URLL}/subscriptions/create/${paymentData.plan_name}/`,
+        {}, // Pass any required data in the body if needed
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      window.location.href = response.data.payment_url; // Redirect to checkout page
+      // Redirect to checkout page (payment URL)
+      window.location.href = response.data.payment_url;
     } catch (error) {
       setStatus({ error: 'Failed to initiate payment' });
       setTimeout(() => {
         setStatus(null);
-      }, 3000);
+      }, 3000); // Clear the status message after 3 seconds
     }
   };
-
   // Display the plans (either from backend or static fallback)
   const renderPlans = (plans.length > 0 ? plans : CardData).map((item, index) => (
     <div
