@@ -37,8 +37,9 @@ const Subscriptions = () => {
   // Fetch subscription plans from the backend
   const fetchSubscriptionPlans = useCallback(async (fetchedToken) => {
     try {
+      console.log(`Fetching plans with token: ${fetchedToken}`);
       const response = await fetch(`${API_URL}/subscriptions/plans/`, {
-        headers: { Authorization: `Bearer ${fetchedToken}` }
+        headers: { Authorization: `Bearer ${fetchedToken}` },
       });
       const data = await response.json();
       setPlans(data); // Store the plans in the state
@@ -51,37 +52,51 @@ const Subscriptions = () => {
     // Check if we are in the client-side environment
     if (typeof window !== 'undefined') {
       const savedToken = localStorage.getItem('access');
-      setToken(savedToken); // Save token in state
-      if (savedToken) {
-        fetchSubscriptionPlans(savedToken); // Fetch plans when the token is available
+      
+      // Check if the token exists
+      if (!savedToken) {
+        console.error('Access token is missing in localStorage');
+        setStatus({ error: 'Token is missing. Please log in.' });
+        return;
       }
+      
+      console.log(`Token retrieved from localStorage: ${savedToken}`);
+      setToken(savedToken); // Save token in state
+      fetchSubscriptionPlans(savedToken); // Fetch plans when the token is available
     }
   }, [fetchSubscriptionPlans]);
 
   // Handle the payment initiation process
   const checkPaymentStatus = async (paymentData) => {
-  try {
-    console.log(`Initiating payment for plan: ${paymentData.plan_name}`);
-    const response = await axios.post(
-      `${API_URL}/subscriptions/create/${paymentData.plan_name}/`,
-      {}, // Pass any required data in the body if needed
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    try {
+      // Check if token exists in state
+      if (!token) {
+        console.error('Token is missing');
+        setStatus({ error: 'Token is missing. Please log in again.' });
+        return;
       }
-    );
-    console.log('Payment response:', response.data); // Log the response
-    window.location.href = response.data.payment_url;
-  } catch (error) {
-    console.error('Payment initiation failed:', error); // Log the full error
-    setStatus({ error: 'Failed to initiate payment' });
-    setTimeout(() => {
-      setStatus(null);
-    }, 3000);
-  }
-};
 
+      console.log(`Initiating payment for plan: ${paymentData.plan_name} with token: ${token}`);
+      
+      const response = await axios.post(
+        `${API_URL}/subscriptions/create/${paymentData.plan_name}/`,
+        {}, // Pass any required data in the body if needed
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log('Payment response:', response.data); // Log the response
+      window.location.href = response.data.payment_url;
+    } catch (error) {
+      console.error('Payment initiation failed:', error); // Log the full error
+      setStatus({ error: 'Failed to initiate payment' });
+      setTimeout(() => {
+        setStatus(null);
+      }, 3000);
+    }
+  };
      
   // Display the plans (either from backend or static fallback)
   const renderPlans = (plans.length > 0 ? plans : CardData).map((item, index) => (
