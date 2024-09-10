@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
 
 export default function Nav() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function Nav() {
 
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`${API_URL}/users/me/`, {
+        const response = await axios.get(`${API_URL}/users/auth/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data);

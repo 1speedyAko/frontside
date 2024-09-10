@@ -24,7 +24,7 @@ const Premium = () => {
 
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`${API_URL}/users/auth/users/me/`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_DJANGO_API_URL}/users/auth/users/me/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         return response.data;
