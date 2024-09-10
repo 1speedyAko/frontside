@@ -2,30 +2,7 @@
 
 import axios from 'axios';
 import React, { useCallback, useState, useEffect } from 'react';
-
-// Static fallback data
-const CardData = [
-  {
-    currency: '$',
-    price: '49.9',
-    description: '/month',
-    title: 'Silver',
-  },
-  {
-    currency: '$',
-    price: '89.9',
-    description: '2 months',
-    discount: '9.9',
-    title: 'Gold',
-  },
-  {
-    currency: '$',
-    price: '129.9',
-    description: '3 months',
-    discount: '20',
-    title: 'Platinum',
-  },
-];
+import jwtDecode from 'jwt-decode'; // Make sure to install this package
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -34,12 +11,35 @@ const Subscriptions = () => {
   const [status, setStatus] = useState(null);
   const [token, setToken] = useState(null);
 
-  // Fetch subscription plans from the backend
+  const decodeToken = (token) => {
+    try {
+      return jwtDecode(token);
+    } catch (error) {
+      console.error('Invalid token:', error);
+      return null;
+    }
+  };
+
+  const isTokenExpired = (token) => {
+    const decoded = decodeToken(token);
+    if (decoded && decoded.exp) {
+      const now = Date.now() / 1000; // Current time in seconds
+      return decoded.exp < now;
+    }
+    return true; // If no expiry claim, consider it expired
+  };
+
   const fetchSubscriptionPlans = useCallback(async (fetchedToken) => {
     try {
-      console.log(`Fetching plans with token: ${fetchedToken}`);
+      console.log('Fetching plans with token:', fetchedToken);
+      if (isTokenExpired(fetchedToken)) {
+        console.warn('Token is expired');
+        // Handle token expiration (e.g., redirect to login)
+        return;
+      }
+
       const response = await fetch(`${API_URL}/subscriptions/plans/`, {
-        headers: { Authorization: `Bearer ${fetchedToken}` },
+        headers: { Authorization: `Bearer ${fetchedToken}` }
       });
       const data = await response.json();
       setPlans(data); // Store the plans in the state
@@ -49,41 +49,30 @@ const Subscriptions = () => {
   }, []);
 
   useEffect(() => {
-    // Check if we are in the client-side environment
     if (typeof window !== 'undefined') {
       const savedToken = localStorage.getItem('access');
-      
-      // Check if the token exists
-      if (!savedToken) {
-        console.error('Access token is missing in localStorage');
-        setStatus({ error: 'Token is missing. Please log in.' });
-        return;
-      }
-      
-      console.log(`Token retrieved from localStorage: ${savedToken}`);
       setToken(savedToken); // Save token in state
-      fetchSubscriptionPlans(savedToken); // Fetch plans when the token is available
+      if (savedToken) {
+        fetchSubscriptionPlans(savedToken); // Fetch plans when the token is available
+      }
     }
   }, [fetchSubscriptionPlans]);
 
-  // Handle the payment initiation process
   const checkPaymentStatus = async (paymentData) => {
     try {
-      // Check if token exists in state
-      if (!token) {
-        console.error('Token is missing');
-        setStatus({ error: 'Token is missing. Please log in again.' });
+      if (isTokenExpired(token)) {
+        console.warn('Token is expired');
+        // Handle token expiration (e.g., redirect to login)
         return;
       }
 
-      console.log(`Initiating payment for plan: ${paymentData.plan_name} with token: ${token}`);
-      
+      console.log(`Initiating payment for plan: ${paymentData.plan_name}`);
       const response = await axios.post(
         `${API_URL}/subscriptions/create/${paymentData.plan_name}/`,
         {}, // Pass any required data in the body if needed
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Use the token from localStorage
           },
         }
       );
@@ -97,8 +86,7 @@ const Subscriptions = () => {
       }, 3000);
     }
   };
-     
-  // Display the plans (either from backend or static fallback)
+
   const renderPlans = (plans.length > 0 ? plans : CardData).map((item, index) => (
     <div
       key={index}
