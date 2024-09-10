@@ -13,43 +13,60 @@ const Subscriptions = () => {
 
   // Decode the JWT token
   const decodeToken = (token) => {
-    try {
-      return jwtDecode(token);
-    } catch (error) {
-      console.error('Invalid token:', error);
+    if (!token) {
+      console.warn('No token provided for decoding');
       return null;
+    }
+    try {
+      return jwtDecode(token); // Use jwt-decode to decode the token
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null; // Return null if decoding fails
     }
   };
 
   // Check if the token is expired, with a buffer
   const isTokenExpired = (token, buffer = 60) => {
-    if (!token) return true; // No token means it's expired
+    if (!token) {
+      console.warn('Token is null or undefined');
+      return true; // If no token, treat it as expired
+    }
 
     try {
-      const decoded = decodeToken(token); // Decode the token
-      if (!decoded.exp) return true; // If no expiration time, consider it expired
+      const decoded = decodeToken(token);
+      if (!decoded || !decoded.exp) return true; // If no expiration time, consider it expired
 
       const now = Math.floor(Date.now() / 1000); // Current time in seconds
       return decoded.exp < now + buffer; // Add a buffer of 60 seconds by default
     } catch (error) {
-      console.error("Error decoding token:", error);
-      return true; // Return true if token decoding fails
+      console.error('Error checking token expiration:', error);
+      return true; // Treat token as expired if any error occurs
     }
   };
 
   // Fetch subscription plans from the backend
   const fetchSubscriptionPlans = useCallback(async (fetchedToken) => {
     try {
-      console.log('Fetching plans with token:', fetchedToken);
-      if (isTokenExpired(fetchedToken)) {
-        console.warn('Token is expired');
-        // Handle token expiration (e.g., redirect to login)
+      if (!fetchedToken) {
+        console.warn('No token provided');
         return;
       }
 
+      console.log('Fetching plans with token:', fetchedToken);
+      if (isTokenExpired(fetchedToken)) {
+        console.warn('Token is expired');
+        return; // Do not proceed if token is expired
+      }
+
       const response = await fetch(`${API_URL}/subscriptions/plans/`, {
-        headers: { Authorization: `Bearer ${fetchedToken}` }
+        headers: { Authorization: `Bearer ${fetchedToken}` },
       });
+
+      if (!response.ok) {
+        console.error('Error fetching plans:', response.statusText);
+        return;
+      }
+
       const data = await response.json();
       setPlans(data); // Store the plans in the state
     } catch (error) {
@@ -60,10 +77,13 @@ const Subscriptions = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedToken = localStorage.getItem('access');
-      setToken(savedToken); // Save token in state
-      if (savedToken) {
-        fetchSubscriptionPlans(savedToken); // Fetch plans when the token is available
+      if (!savedToken) {
+        console.warn('No token found in localStorage');
+        return;
       }
+
+      setToken(savedToken); // Save token in state
+      fetchSubscriptionPlans(savedToken); // Fetch plans when the token is available
     }
   }, [fetchSubscriptionPlans]);
 
@@ -71,7 +91,6 @@ const Subscriptions = () => {
     try {
       if (isTokenExpired(token)) {
         console.warn('Token is expired');
-        // Handle token expiration (e.g., redirect to login)
         return;
       }
 
@@ -85,10 +104,9 @@ const Subscriptions = () => {
           },
         }
       );
-      console.log('Payment response:', response.data); // Log the response
       window.location.href = response.data.payment_url;
     } catch (error) {
-      console.error('Payment initiation failed:', error); // Log the full error
+      console.error('Payment initiation failed:', error);
       setStatus({ error: 'Failed to initiate payment' });
       setTimeout(() => {
         setStatus(null);
