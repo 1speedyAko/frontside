@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import React, { useCallback, useState, useEffect } from 'react';
-import jwtDecode from 'jwt-decode'; // Correct way to import the default export
+import { isTokenExpired,getToken } from '../api/utils/jwtUtils';// Import JWT functions
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -10,26 +10,6 @@ const Subscriptions = () => {
   const [plans, setPlans] = useState([]);
   const [status, setStatus] = useState(null);
   const [token, setToken] = useState(null);
-
-  // Decode the JWT token
-  const decodeToken = (token) => {
-    try {
-      return jwtDecode(token);
-    } catch (error) {
-      console.error('Invalid token:', error);
-      return null;
-    }
-  };
-
-  // Check if the token is expired (useCallback added)
-  const isTokenExpired = useCallback((token) => {
-    const decoded = decodeToken(token);
-    if (decoded && decoded.exp) {
-      const now = Date.now() / 1000; // Current time in seconds
-      return decoded.exp < now;
-    }
-    return true; // If no expiry claim, consider it expired
-  }, []); // Empty dependency array since the logic doesn't depend on anything external
 
   // Fetch subscription plans from the backend
   const fetchSubscriptionPlans = useCallback(async (fetchedToken) => {
@@ -59,11 +39,11 @@ const Subscriptions = () => {
     } catch (error) {
       console.error('Error fetching subscription plans:', error);
     }
-  }, [isTokenExpired]); // isTokenExpired added to the dependency array
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedToken = localStorage.getItem('access');
+      const savedToken = getToken(); // Retrieve token using jwtUtils
       setToken(savedToken); // Save token in state
       if (savedToken) {
         fetchSubscriptionPlans(savedToken); // Fetch plans when the token is available
