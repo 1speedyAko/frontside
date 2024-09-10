@@ -21,15 +21,21 @@ const Subscriptions = () => {
     }
   };
 
-  // Check if the token is expired
-  const isTokenExpired = useCallback((token) => {
-    const decoded = decodeToken(token);
-    if (decoded && decoded.exp) {
-      const now = Date.now() / 1000; // Current time in seconds
-      return decoded.exp < now;
+  // Check if the token is expired, with a buffer
+  const isTokenExpired = (token, buffer = 60) => {
+    if (!token) return true; // No token means it's expired
+
+    try {
+      const decoded = decodeToken(token); // Decode the token
+      if (!decoded.exp) return true; // If no expiration time, consider it expired
+
+      const now = Math.floor(Date.now() / 1000); // Current time in seconds
+      return decoded.exp < now + buffer; // Add a buffer of 60 seconds by default
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return true; // Return true if token decoding fails
     }
-    return true; // If no expiry claim, consider it expired
-  }, []);
+  };
 
   // Fetch subscription plans from the backend
   const fetchSubscriptionPlans = useCallback(async (fetchedToken) => {
@@ -49,7 +55,7 @@ const Subscriptions = () => {
     } catch (error) {
       console.error('Error fetching subscription plans:', error);
     }
-  }, [isTokenExpired]);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
