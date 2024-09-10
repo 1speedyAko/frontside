@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import React, { useCallback, useState, useEffect } from 'react';
-import jwtDecode from 'jwt-decode'; // Make sure to install this package
+import jwtDecode from 'jwt-decode'; // Correct import
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -11,6 +11,7 @@ const Subscriptions = () => {
   const [status, setStatus] = useState(null);
   const [token, setToken] = useState(null);
 
+  // Decode the JWT token
   const decodeToken = (token) => {
     try {
       return jwtDecode(token);
@@ -20,15 +21,17 @@ const Subscriptions = () => {
     }
   };
 
-  const isTokenExpired = (token) => {
+  // Check if the token is expired
+  const isTokenExpired = useCallback((token) => {
     const decoded = decodeToken(token);
     if (decoded && decoded.exp) {
       const now = Date.now() / 1000; // Current time in seconds
       return decoded.exp < now;
     }
     return true; // If no expiry claim, consider it expired
-  };
+  }, []);
 
+  // Fetch subscription plans from the backend
   const fetchSubscriptionPlans = useCallback(async (fetchedToken) => {
     try {
       console.log('Fetching plans with token:', fetchedToken);
@@ -46,7 +49,7 @@ const Subscriptions = () => {
     } catch (error) {
       console.error('Error fetching subscription plans:', error);
     }
-  }, []);
+  }, [isTokenExpired]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -87,7 +90,7 @@ const Subscriptions = () => {
     }
   };
 
-  const renderPlans = (plans.length > 0 ? plans : CardData).map((item, index) => (
+  const renderPlans = (plans.length > 0 ? plans : []).map((item, index) => (
     <div
       key={index}
       className="relative bg-black p-6 rounded-lg shadow-lg flex flex-col justify-between min-h-[200px]"
