@@ -68,21 +68,31 @@ const Subscriptions = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedToken = getToken(); // Retrieve token using jwtUtils
-      setToken(savedToken); // Save token in state
-      if (savedToken) {
-        fetchSubscriptionPlans(savedToken); // Fetch plans when the token is available
+  
+      if (savedToken && !isTokenExpired(savedToken)) {
+        setToken(savedToken); // Save valid token in state
+        fetchSubscriptionPlans(savedToken); // Fetch plans when the token is valid
+      } else {
+        console.warn('Token is missing or expired');
       }
     }
   }, [fetchSubscriptionPlans]);
-
+  
   const checkPaymentStatus = async (paymentData) => {
     try {
+      if (!token) {
+        console.error('Token is missing');
+        return; // Exit if there's no token
+      }
+  
       if (isTokenExpired(token)) {
         console.warn('Token is expired');
-        return; // Do not proceed if token is expired
+        return; // Exit if the token is expired
       }
-
+  
+      console.log(`Using token: ${token}`);
       console.log(`Initiating payment for plan: ${paymentData.plan_name}`);
+  
       const response = await axios.post(
         `${API_URL}/subscriptions/create/${paymentData.plan_name}/`,
         {}, // Pass any required data in the body if needed
@@ -92,8 +102,10 @@ const Subscriptions = () => {
           },
         }
       );
+      
       console.log('Payment response:', response.data); // Log the response
       window.location.href = response.data.payment_url;
+  
     } catch (error) {
       console.error('Payment initiation failed:', error); // Log the full error
       setStatus({ error: 'Failed to initiate payment' });
@@ -102,6 +114,7 @@ const Subscriptions = () => {
       }, 3000);
     }
   };
+  
 
   const renderPlans = (plans.length > 0 ? plans : CardData).map((item, index) => (
     <div

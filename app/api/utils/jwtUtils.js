@@ -1,5 +1,4 @@
-// jwtUtils.js
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from "jwt-decode"; // Ensure this import is correct without curly braces
 
 // Decode the JWT token
 export const decodeToken = (token) => {
@@ -21,14 +20,15 @@ export const isTokenExpired = (token) => {
   return true; // Consider expired if no expiry claim
 };
 
-// Function to save the JWT token
+// Function to save the JWT token as a string
 export const saveToken = (token) => {
-  localStorage.setItem('jwtToken', token);
+  localStorage.setItem('jwtToken', String(token)); // Ensure the token is stored as a string
 };
 
-// Function to get the token from localStorage
+// Function to get the token from localStorage and ensure it's a string
 export const getToken = () => {
-  return localStorage.getItem('jwtToken');
+  const token = localStorage.getItem('jwtToken');
+  return token ? String(token) : null; // Return token as a string or null if not found
 };
 
 // Function to remove the token from localStorage
