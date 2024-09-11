@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
 import { checkAndRefreshToken } from '../api/utils/jwtUtils';
