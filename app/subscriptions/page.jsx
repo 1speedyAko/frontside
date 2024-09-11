@@ -20,14 +20,15 @@ export default async function SubscriptionPage() {
     return <p>You need to be logged in to view subscriptions.</p>;
   }
 
-  const accessToken = token.accessToken;
+const accessToken = localStorage.getItem("access");
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    cache: "no-store",
-  });
+const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
+  headers: {
+    'Authorization': `Bearer ${accessToken}`,
+  },
+  cache: 'no-store', // Ensure fresh data
+});
+
 
   if (!res.ok) {
     return <p>Failed to load subscription plans.</p>;
