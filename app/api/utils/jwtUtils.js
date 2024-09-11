@@ -2,6 +2,7 @@
 
 import jwtDecode from "jwt-decode";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 // Decode the JWT token
 export const decodeToken = (token) => {
   try {
@@ -75,11 +76,12 @@ export const refreshAccessToken = async () => {
   }
 
   try {
-    const response = await axios.post(`${API_URL}/auth/refresh/`, {
-      refresh_token: refreshToken,
+    // Use the correct Djoser JWT refresh URL
+    const response = await axios.post(`${API_URL}/auth/jwt/refresh/`, {
+      refresh: refreshToken,  // Use 'refresh' instead of 'refresh_token' for Djoser
     });
 
-    const newAccessToken = response.data.access;
+    const newAccessToken = response.data.access; // Djoser returns 'access'
     saveToken(newAccessToken); // Save the new token
     return newAccessToken;
   } catch (error) {
