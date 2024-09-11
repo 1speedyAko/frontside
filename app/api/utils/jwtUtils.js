@@ -1,9 +1,8 @@
-// jwtUtils.js
-
 import jwtDecode from "jwt-decode";
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 // Decode the JWT token
 export const decodeToken = (token) => {
   try {
@@ -24,11 +23,14 @@ export const isTokenExpired = (token) => {
   return true; // Consider expired if no expiry claim
 };
 
-// Save the JWT token
 // Save the JWT token (both access and refresh tokens)
 export const saveToken = (token) => {
-  localStorage.setItem('jwtToken', JSON.stringify(token.access));  // Save access token
-  saveRefreshToken(token.refresh);  // Save refresh token
+  if (token.access && token.refresh) {
+    localStorage.setItem('jwtToken', JSON.stringify(token.access));  // Save access token
+    saveRefreshToken(token.refresh);  // Save refresh token
+  } else if (typeof token === 'string') {
+    localStorage.setItem('jwtToken', JSON.stringify(token)); // Save access token when refreshing
+  }
 };
 
 // Get the token from localStorage
@@ -64,7 +66,7 @@ export const checkAndRefreshToken = async () => {
   }
 
   if (token) {
-    return token;
+    return getToken(); // Return the valid token after potential refresh
   }
 
   console.warn('No valid token available');
@@ -79,9 +81,8 @@ export const refreshAccessToken = async () => {
   }
 
   try {
-    // Use the correct Djoser JWT refresh URL
     const response = await axios.post(`${API_URL}/auth/jwt/refresh/`, {
-      refresh: refreshToken,  // Use 'refresh' instead of 'refresh_token' for Djoser
+      refresh: refreshToken,  // 'refresh' field for Djoser
     });
 
     const newAccessToken = response.data.access; // Djoser returns 'access'

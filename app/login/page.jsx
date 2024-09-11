@@ -29,11 +29,16 @@ export default function SignInSide() {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${DJANGO_URL}/users/auth/jwt/create/`, {        email: formdata.email,
+      const response = await axios.post(`${DJANGO_URL}/users/auth/jwt/create/`, {
+        email: formdata.email,
         password: formdata.password,
       });
+  
+      // Save both access and refresh tokens
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
+  
+      // Redirect to profile page
       router.push("/profile");
     } catch (err) {
       setError("Invalid credentials");
@@ -41,7 +46,7 @@ export default function SignInSide() {
       setLoading(false);
     }
   };
-
+  
   if (loading) {
     return <Spinner/>;
   }
