@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SubscriptionPlans from "../components/SubscriptionPlans";
+import Spinner from "../spinner/page";
 
 export default function SubscriptionPage() {
   const [plans, setPlans] = useState(null);
