@@ -1,16 +1,35 @@
-// app/subscriptions/page.js
+// /app/subscriptions/page.jsx
+
+import { headers } from "next/headers";
+import { getToken } from "next-auth/jwt";
 import SubscriptionPlans from "../components/SubscriptionPlans";
 
 export default async function SubscriptionPage() {
+  const reqHeaders = headers();
+
+  const token = await getToken({
+    req: {
+      headers: {
+        get: (name) => reqHeaders.get(name),
+      },
+    },
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  if (!token || !token.accessToken) {
+    return <p>You need to be logged in to view subscriptions.</p>;
+  }
+
+  const accessToken = token.accessToken;
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
     headers: {
-      'Authorization': `Bearer ${getAccessToken()}`, // Implement getAccessToken accordingly
+      Authorization: `Bearer ${accessToken}`,
     },
-    cache: 'no-store', // Ensure fresh data
+    cache: "no-store",
   });
 
   if (!res.ok) {
-    // Handle error
     return <p>Failed to load subscription plans.</p>;
   }
 
