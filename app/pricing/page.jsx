@@ -2,7 +2,31 @@
 
 import axios from 'axios';
 import React, { useCallback, useState, useEffect } from 'react';
-import { isTokenExpired,getToken } from '../api/utils/jwtUtils';// Import JWT functions
+import { isTokenExpired, getToken } from '../api/utils/jwtUtils'; // Import JWT functions
+
+// Static fallback data
+const CardData = [
+  {
+    currency: '$',
+    price: '49.9',
+    description: '/month',
+    title: 'Silver',
+  },
+  {
+    currency: '$',
+    price: '89.9',
+    description: '2 months',
+    discount: '9.9',
+    title: 'Gold',
+  },
+  {
+    currency: '$',
+    price: '129.9',
+    description: '3 months',
+    discount: '20',
+    title: 'Platinum',
+  },
+];
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -79,7 +103,7 @@ const Subscriptions = () => {
     }
   };
 
-  const renderPlans = (plans.length > 0 ? plans : []).map((item, index) => (
+  const renderPlans = (plans.length > 0 ? plans : CardData).map((item, index) => (
     <div
       key={index}
       className="relative bg-black p-6 rounded-lg shadow-lg flex flex-col justify-between min-h-[200px]"
