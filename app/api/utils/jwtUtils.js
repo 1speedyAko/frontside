@@ -1,4 +1,6 @@
-import jwtDecode from "jwt-decode"; // Ensure this import is correct without curly braces
+// jwtUtils.js
+
+import jwtDecode from "jwt-decode";
 
 // Decode the JWT token
 export const decodeToken = (token) => {
@@ -20,18 +22,69 @@ export const isTokenExpired = (token) => {
   return true; // Consider expired if no expiry claim
 };
 
-// Function to save the JWT token as a string
+// Save the JWT token
 export const saveToken = (token) => {
-  localStorage.setItem('jwtToken', String(token)); // Ensure the token is stored as a string
+  localStorage.setItem('jwtToken', JSON.stringify(token));
 };
 
-// Function to get the token from localStorage and ensure it's a string
+// Get the token from localStorage
 export const getToken = () => {
   const token = localStorage.getItem('jwtToken');
-  return token ? String(token) : null; // Return token as a string or null if not found
+  return token ? JSON.parse(token) : null;
 };
 
-// Function to remove the token from localStorage
-export const removeToken = () => {
+// Save refresh token
+export const saveRefreshToken = (refreshToken) => {
+  localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+};
+
+// Get refresh token
+export const getRefreshToken = () => {
+  const refreshToken = localStorage.getItem('refreshToken');
+  return refreshToken ? JSON.parse(refreshToken) : null;
+};
+
+// Remove tokens from localStorage
+export const removeTokens = () => {
   localStorage.removeItem('jwtToken');
+  localStorage.removeItem('refreshToken');
+};
+
+// Check token validity and refresh it if needed
+export const checkAndRefreshToken = async () => {
+  let token = getToken();
+
+  if (token && isTokenExpired(token)) {
+    console.warn('Token expired, attempting refresh...');
+    token = await refreshAccessToken();
+  }
+
+  if (token) {
+    return token;
+  }
+
+  console.warn('No valid token available');
+  return null;
+};
+
+// Refresh access token using refresh token
+export const refreshAccessToken = async () => {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) {
+    return null; // No refresh token available
+  }
+
+  try {
+    const response = await axios.post(`${API_URL}/auth/refresh/`, {
+      refresh_token: refreshToken,
+    });
+
+    const newAccessToken = response.data.access;
+    saveToken(newAccessToken); // Save the new token
+    return newAccessToken;
+  } catch (error) {
+    console.error('Failed to refresh access token:', error);
+    removeTokens(); // Clear tokens on failure
+    return null;
+  }
 };
