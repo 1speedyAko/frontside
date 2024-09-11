@@ -166,7 +166,7 @@ const Profile = () => {
           </div>
           {!isPremium && (
             <div className="absolute inset-0 flex justify-center items-center bg-white bg-opacity-75 rounded-lg">
-              <Link href="/pricing" legacyBehavior>
+              <Link href="/subscriptions" legacyBehavior>
                 <a className="bg-yellow-500 text-white py-2 px-4 rounded-lg flex items-center hover:bg-yellow-600">
                   <span className="mr-2"><i className="fas fa-crown text-yellow-500"></i></span>
                   Go Premium
