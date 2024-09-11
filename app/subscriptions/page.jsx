@@ -50,7 +50,7 @@ export default function SubscriptionPage() {
   }
 
   if (!plans) {
-    return <p>Loading subscription plans...</p>;
+    return <Spinner/>
   }
 
   return (
