@@ -18,26 +18,29 @@ const Subscriptions = () => {
   const [status, setStatus] = useState(null);
 
   // Fetch subscription plans from the backend
-  const fetchSubscriptionPlans = useCallback(async () => {
-    const token = await checkAndRefreshToken(); // Check token and refresh if needed
+  // Subscriptions.jsx
+const fetchSubscriptionPlans = useCallback(async () => {
+  const token = await checkAndRefreshToken();
 
-    if (!token) {
-      console.warn('No valid token available');
-      return; // Don't proceed if no valid token
+  if (!token) {
+    console.warn('No valid token available');
+    return;
+  }
+
+  console.log('Token retrieved:', token);
+
+  try {
+    const response = await axios.get(`${API_URL}/subscriptions/plans/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.status === 200) {
+      setPlans(response.data); // Store plans in the state
     }
-
-    try {
-      const response = await axios.get(`${API_URL}/subscriptions/plans/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.status === 200) {
-        setPlans(response.data); // Store plans in the state
-      }
-    } catch (error) {
-      console.error('Error fetching subscription plans:', error);
-    }
-  }, []);
+  } catch (error) {
+    console.error('Error fetching subscription plans:', error);
+  }
+}, []);
 
   useEffect(() => {
     fetchSubscriptionPlans(); // Fetch plans on component mount
