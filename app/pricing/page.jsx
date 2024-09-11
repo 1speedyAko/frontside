@@ -3,7 +3,8 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
 import { checkAndRefreshToken } from '../api/utils/jwtUtils';
-import Spinner from '../components/Spinner'; // Import the Spinner component
+import Spinner from '../spinner/page';
+ // Import the Spinner component
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -105,7 +106,7 @@ const Subscriptions = () => {
       <h1 className="text-white text-3xl font-bold mb-8">Select a Plan</h1>
       
       {loading ? ( 
-        <Spinner />  // Correct usage of Spinner component
+        <Spinner/>  // Correct usage of Spinner component
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
           {renderPlans}
