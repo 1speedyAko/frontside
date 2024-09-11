@@ -1,40 +1,57 @@
-// /app/subscriptions/page.jsx
+"use client";
 
-import { headers } from "next/headers";
-import { getToken } from "next-auth/jwt";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import SubscriptionPlans from "../components/SubscriptionPlans";
 
-export default async function SubscriptionPage() {
-  const reqHeaders = headers();
+export default function SubscriptionPage() {
+  const [plans, setPlans] = useState(null);
+  const [error, setError] = useState(null);
+  const router = useRouter();
 
-  const token = await getToken({
-    req: {
-      headers: {
-        get: (name) => reqHeaders.get(name),
-      },
-    },
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+  useEffect(() => {
+    // Fetch subscription plans when the component mounts
+    const fetchSubscriptionPlans = async () => {
+      const accessToken = localStorage.getItem("access"); // JWT access token
 
-  if (!token || !token.accessToken) {
-    return <p>You need to be logged in to view subscriptions.</p>;
+      // If no token is found, redirect to login
+      if (!accessToken) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          cache: "no-store", // Ensure fresh data
+        });
+
+        // Handle failed response
+        if (!res.ok) {
+          throw new Error("Failed to fetch subscription plans");
+        }
+
+        // Parse the JSON response
+        const data = await res.json();
+        setPlans(data);
+      } catch (error) {
+        // Set an error message
+        setError(error.message || "An error occurred while fetching subscription plans.");
+      }
+    };
+
+    fetchSubscriptionPlans();
+  }, [router]); // Depend on the router for redirection
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
-const accessToken = localStorage.getItem("access");
-
-const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
-  headers: {
-    'Authorization': `Bearer ${accessToken}`,
-  },
-  cache: 'no-store', // Ensure fresh data
-});
-
-
-  if (!res.ok) {
-    return <p>Failed to load subscription plans.</p>;
+  if (!plans) {
+    return <p>Loading subscription plans...</p>;
   }
-
-  const plans = await res.json();
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-ebony">
