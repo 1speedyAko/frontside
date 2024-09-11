@@ -1,5 +1,5 @@
 // app/subscriptions/page.js
-import SubscriptionPlans from '@/components/SubscriptionPlans';
+import SubscriptionPlans from "../components/SubscriptionPlans";
 
 export default async function SubscriptionPage() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
