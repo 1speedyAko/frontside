@@ -1,6 +1,7 @@
 // jwtUtils.js
 
 import jwtDecode from "jwt-decode";
+import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 // Decode the JWT token
@@ -24,8 +25,10 @@ export const isTokenExpired = (token) => {
 };
 
 // Save the JWT token
+// Save the JWT token (both access and refresh tokens)
 export const saveToken = (token) => {
-  localStorage.setItem('jwtToken', JSON.stringify(token));
+  localStorage.setItem('jwtToken', JSON.stringify(token.access));  // Save access token
+  saveRefreshToken(token.refresh);  // Save refresh token
 };
 
 // Get the token from localStorage

@@ -1,12 +1,10 @@
-'use client';
-
 import React, { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
-import { checkAndRefreshToken } from '../api/utils/jwtUtils'; // Use only checkAndRefreshToken
+import { checkAndRefreshToken } from '../api/utils/jwtUtils';
+import Spinner from '../components/Spinner'; // Import the Spinner component
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// Static fallback data for plans
 const fallbackPlans = [
   { currency: '$', price: '49.9', description: '/month', title: 'Silver' },
   { currency: '$', price: '89.9', description: '2 months', discount: '9.9', title: 'Gold' },
@@ -16,39 +14,40 @@ const fallbackPlans = [
 const Subscriptions = () => {
   const [plans, setPlans] = useState([]);
   const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(false); // Loading state
 
-  // Fetch subscription plans from the backend
-  // Subscriptions.jsx
-const fetchSubscriptionPlans = useCallback(async () => {
-  const token = await checkAndRefreshToken();
+  // Fetch subscription plans
+  const fetchSubscriptionPlans = useCallback(async () => {
+    setLoading(true);  // Show loading spinner
+    const token = await checkAndRefreshToken();
 
-  if (!token) {
-    console.warn('No valid token available');
-    return;
-  }
-
-  console.log('Token retrieved:', token);
-
-  try {
-    const response = await axios.get(`${API_URL}/subscriptions/plans/`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (response.status === 200) {
-      setPlans(response.data); // Store plans in the state
+    if (!token) {
+      console.warn('No valid token available');
+      setLoading(false);
+      return;
     }
-  } catch (error) {
-    console.error('Error fetching subscription plans:', error);
-  }
-}, []);
+
+    try {
+      const response = await axios.get(`${API_URL}/subscriptions/plans/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.status === 200) {
+        setPlans(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching subscription plans:', error);
+    } finally {
+      setLoading(false);  // Stop loading spinner
+    }
+  }, []);
 
   useEffect(() => {
-    fetchSubscriptionPlans(); // Fetch plans on component mount
+    fetchSubscriptionPlans();
   }, [fetchSubscriptionPlans]);
 
-  // Handle the payment initiation process
   const handlePayment = async (planName) => {
-    const token = await checkAndRefreshToken(); // Ensure token is valid before proceeding
+    const token = await checkAndRefreshToken();
 
     if (!token) {
       setStatus({ error: 'Token is missing or invalid' });
@@ -71,7 +70,6 @@ const fetchSubscriptionPlans = useCallback(async () => {
     }
   };
 
-  // Render subscription plans
   const renderPlans = (plans.length > 0 ? plans : fallbackPlans).map((plan, index) => (
     <div
       key={index}
@@ -103,9 +101,14 @@ const fetchSubscriptionPlans = useCallback(async () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-ebony p-4">
       <h1 className="text-white text-3xl font-bold mb-8">Select a Plan</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
-        {renderPlans}
-      </div>
+      
+      {loading ? ( 
+        <Spinner />  // Correct usage of Spinner component
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+          {renderPlans}
+        </div>
+      )}
 
       {status && (
         <div className="mt-4 p-4 bg-gray-800 text-white rounded-lg">
