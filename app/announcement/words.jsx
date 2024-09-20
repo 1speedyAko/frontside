@@ -40,16 +40,22 @@ const Announcements = () => {
     <div className="p-4">
       <h2 className="text-2xl font-semibold text-center mb-4 primary">Announcements</h2>
       <ul className="list-disc list-inside">
-        {announcements.map((announcement) => (
-          <table>
-            <th key={announcement.id} className="mb-2">
-              <th className="text-xl font-bold primary">{announcement.title}</th>
-              <td className="text-white">{announcement.word}</td>
-            </th>
-          </table>
-          
-        ))}
-      </ul>
+  {announcements.map((announcement) => (
+    <table key={announcement.id}>
+      <thead>
+        <tr>
+          <th className="text-xl font-bold primary">{announcement.title}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="text-white">{announcement.word}</td>
+        </tr>
+      </tbody>
+    </table>
+  ))}
+</ul>
+
     </div>
   );
 };
