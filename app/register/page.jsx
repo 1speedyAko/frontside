@@ -36,7 +36,7 @@ export default function SignUp() {
     }
     setLoading(true);
     try {
-      await axios.post(`${API_URL}/users/auth/users/`, {
+      await axios.post(`${API_URL}users/auth/users/`, {
         email: formData.email,
         password: formData.password,
         re_password: formData.confirmPassword,
