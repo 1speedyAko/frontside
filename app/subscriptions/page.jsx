@@ -24,7 +24,7 @@ export default function SubscriptionPage() {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
           cache: "no-store", // Ensure fresh data
         });
