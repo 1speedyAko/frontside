@@ -18,7 +18,7 @@ const Premium = () => {
     
     if (!token) {
       // Comment out the redirect to login for development
-      // window.location.href = '/login';
+      window.location.href = '/login';
       return;
     }
 

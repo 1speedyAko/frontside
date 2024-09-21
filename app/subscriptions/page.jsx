@@ -13,10 +13,10 @@ export default function SubscriptionPage() {
   useEffect(() => {
     // Fetch subscription plans when the component mounts
     const fetchSubscriptionPlans = async () => {
-      const accessToken = localStorage.getItem("access"); // JWT access token
+      const token = localStorage.getItem("access"); // JWT access token
 
       // If no token is found, redirect to login
-      if (!accessToken) {
+      if (!token) {
         router.push("/login");
         return;
       }
