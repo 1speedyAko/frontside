@@ -12,7 +12,7 @@ export default function PlanPaymentPage({ params }) {
   useEffect(() => {
     const initiatePayment = async () => {
       try {
-        const token = getAccessToken(); // Implement token retrieval
+        const token = localStorage.getItem('access'); //
         const response = await axios.post(`/api/subscriptions/${plan_name}`, {}, {
           headers: {
             'Authorization': `Bearer ${token}`,
