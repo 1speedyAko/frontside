@@ -14,7 +14,7 @@ export default function SubscriptionPage() {
     // Fetch subscription plans when the component mounts
     const fetchSubscriptionPlans = async () => {
       const token = localStorage.getItem("access"); // JWT access token
-
+      console.log
       // If no token is found, redirect to login
       if (!token) {
         router.push("/login");
