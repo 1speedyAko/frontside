@@ -17,7 +17,7 @@ export default function SubscriptionPage() {
       console.log
       // If no token is found, redirect to login
       if (!token) {
-        router.push("/profile");
+        router.push("/login");
         return;
       }
 
