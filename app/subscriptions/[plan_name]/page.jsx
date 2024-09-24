@@ -14,7 +14,7 @@ export default function PlanPaymentPage({ params }) {
       try {
         const token = localStorage.getItem('access');
 
-        const response = await axios.post(`/api/subscriptions/${plan_name}`, {
+        const response = await axios(`/api/subscriptions/${plan_name}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
