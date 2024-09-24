@@ -1,4 +1,3 @@
-// app/subscriptions/[plan_name]/page.js
 'use client';
 
 import { useEffect } from 'react';
@@ -13,15 +12,16 @@ export default function PlanPaymentPage({ params }) {
     const initiatePayment = async () => {
       try {
         const token = localStorage.getItem('access');
-
-        const response = await axios(`/api/subscriptions/${plan_name}`, {
+        
+        const response = await axios.post(`/api/subscriptions/${plan_name}/`, {}, {
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
           },
         });
 
-        if (response.data.payment_url) {
-          window.location.href = response.data.payment_url;
+        if (response.data.checkout_url) {
+          window.location.href = response.data.checkout_url;
         } else {
           alert('Failed to initiate payment.');
           router.push('/subscriptions');
