@@ -1,3 +1,4 @@
+// app/subscriptions/[plan_name]/page.js
 'use client';
 
 import { useEffect } from 'react';
@@ -13,16 +14,12 @@ export default function PlanPaymentPage({ params }) {
       try {
         const token = localStorage.getItem('access');
 
-        // Correcting the axios post request to include headers in the correct place
-        const response = await axios.post(
-          `/api/subscriptions/${plan_name}/`, // Make sure the trailing slash matches your backend route
-          {}, // Pass an empty object if no body data is required
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Properly structured headers
-            },
-          }
-        );
+        const response = await axios.post(`/api/subscriptions/${plan_name}/`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
 
         if (response.data.payment_url) {
           window.location.href = response.data.payment_url;
