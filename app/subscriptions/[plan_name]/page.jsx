@@ -15,7 +15,7 @@ export default function PlanPaymentPage({ params }) {
 
         // Correcting the axios post request to include headers in the correct place
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create/${plan_name}/`, // Make sure the trailing slash matches your backend route
+          `/api/subscriptions/${plan_name}/`, // Make sure the trailing slash matches your backend route
           {}, // Pass an empty object if no body data is required
           {
             headers: {
