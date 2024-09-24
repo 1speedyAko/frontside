@@ -1,5 +1,5 @@
 // app/subscriptions/[plan_name]/page.js
-'use client'; // If using client-side features
+'use client';
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -12,8 +12,9 @@ export default function PlanPaymentPage({ params }) {
   useEffect(() => {
     const initiatePayment = async () => {
       try {
-        const token = getAccessToken(); // Implement token retrieval
-        const response = await axios.post(`/api/subscriptions/${plan_name}`, {}, {
+        const token = localStorage.getItem('access');
+
+        const response = await axios.post(`/api/subscriptions/${plan_name}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -22,7 +23,6 @@ export default function PlanPaymentPage({ params }) {
         if (response.data.payment_url) {
           window.location.href = response.data.payment_url;
         } else {
-          // Handle error
           alert('Failed to initiate payment.');
           router.push('/subscriptions');
         }

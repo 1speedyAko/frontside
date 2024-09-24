@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SubscriptionPlans from "../components/SubscriptionPlans";
 import Spinner from "../spinner/page";
+import axios from 'axios';
 
 export default function SubscriptionPage() {
   const [plans, setPlans] = useState(null);
@@ -22,7 +23,7 @@ export default function SubscriptionPage() {
       }
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
