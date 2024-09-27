@@ -16,6 +16,8 @@ export default function PlanPaymentPage({ params }) {
 
       try {
         const token = localStorage.getItem('access');
+        console.log('Token:', token); // Debugging
+
 
         if (!token) {
           alert('Unauthorized access');
@@ -30,7 +32,7 @@ export default function PlanPaymentPage({ params }) {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
-            },
+            }            
           }
         );
 
