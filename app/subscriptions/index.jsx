@@ -1,3 +1,4 @@
+"use client"
 import { getToken } from 'next-auth/jwt';
 import SubscriptionPlans from '../components/SubscriptionPlans';
 
