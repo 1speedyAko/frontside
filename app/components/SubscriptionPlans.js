@@ -32,7 +32,7 @@ const SubscriptionPlans = ({ plans }) => {
             <p className="text-gray-400 mt-4">Save {plan.currency}{plan.discount}</p>
           )}
 
-          <Link href={`/subscriptions/${plan.category}`}>
+          <Link href={`${process.env.NEXT_PUBLIC_API_URL}/api/subscriptions/create/${plan.category}/`}>
             <a className="bg-indigo-600 text-white py-2 px-4 rounded-lg mt-4 inline-block">
               Subscribe
             </a>
