@@ -12,6 +12,7 @@ export default function SubscriptionPage({ params }) {
   useEffect(() => {
     const createSubscription = async () => {
       try {
+        const token = JSON.parse(localStorage.getItem('token'));
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/api/subscriptions/create/${plan_name}/`,
           {}, // empty payload
