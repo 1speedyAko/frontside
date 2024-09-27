@@ -12,7 +12,17 @@ export default function SubscriptionPage({ params }) {
   useEffect(() => {
     const createSubscription = async () => {
       try {
-        const response = await axios.post(`/api/subscription/${plan_name}`);
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/subscriptions/create/${plan_name}/`,
+          {}, // empty payload
+          {
+            headers: {
+              'Authorization': `Bearer ${token.accessToken}`, // Pass the token in the headers
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+    
 
         // Redirect to the payment URL
         if (response.data.payment_url) {
