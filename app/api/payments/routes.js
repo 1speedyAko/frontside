@@ -7,11 +7,11 @@ const DJANGO_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request) {
   const data = await request.json();
-  const accessToken = request.headers.get('Authorization').split(' ')[1];
+  const token = request.headers.get('Authorization').split(' ')[1];
 
   const response = await axios.post(`${DJANGO_API_URL}/payments/`, data, {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 

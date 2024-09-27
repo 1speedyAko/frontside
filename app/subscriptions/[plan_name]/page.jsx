@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import Spinner from '@/app/spinner/page';
 
 export default function PlanPaymentPage({ params }) {
   const { plan_name } = params;
+  const [loading, setLoading] = useState(False)
   const router = useRouter();
 
   useEffect(() => {
@@ -36,5 +38,9 @@ export default function PlanPaymentPage({ params }) {
     initiatePayment();
   }, [plan_name, router]);
 
-  return <p>Redirecting to payment...</p>;
+    return {
+      if (loading) {
+        return <Spinner/>
+    }
+  }
 }

@@ -4,8 +4,8 @@ import { getToken } from 'next-auth/jwt';
 
 export async function POST(request, { params }) {
   const { plan_name } = params;
-  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
-
+  const token =  getToken({req: request})
+  
   if (!token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
