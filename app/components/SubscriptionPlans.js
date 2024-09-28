@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from '@/hooks/useAuth';  // Example auth hook to get the token
+import { useAuth } from '../hooks/useAuth'; // Example auth hook to get the token
 
 export default function SubscriptionButton({ plan }) {
   const router = useRouter();
