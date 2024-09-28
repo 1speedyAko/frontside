@@ -11,8 +11,9 @@ const SubscriptionPlans = ({ plans }) => {
 
   const handleSubscription = async (plan) => {
     try {
+      // Make a request to your Django backend to get the CoinPayments URL
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create/${plan.category}/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create/${plan.category}/`,   // Adjust the API path to match your backend endpoint
         {},
         {
           headers: {
@@ -23,7 +24,7 @@ const SubscriptionPlans = ({ plans }) => {
       );
 
       if (response.data.payment_url) {
-        // Redirect to the payment URL
+        // Redirect to CoinPayments payment URL
         window.location.href = response.data.payment_url;
       } else {
         alert('Failed to initiate payment.');
