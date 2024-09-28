@@ -36,11 +36,11 @@ const SubscriptionPlans = ({ plans }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
       {plans.map((plan) => (
         <div 
           key={plan.category} 
-          className="p-6 bg-ebony shadow-md rounded-lg border border-gray-400 hover:prime transition-all duration-300"
+          className="p-6 bg-ebony shadow-md rounded-lg border border-gray-400 "
         >
           <h3 className="text-xl font-bold prime capitalize">{plan.category}</h3>
           

@@ -5,9 +5,9 @@ export const useAuth = () => {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('accessToken'); // Assuming token is stored as 'accessToken'
-    if (storedToken) {
-      setToken(storedToken);
+    const token = localStorage.getItem('access'); // Assuming token is stored as 'access'
+    if (token) {
+      setToken(token);
     }
   }, []);
 
