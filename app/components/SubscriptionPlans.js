@@ -6,15 +6,23 @@ import axios from 'axios';
 import { useAuth } from '../hooks/useAuth'; // Assuming this hook provides the JWT token
 
 const SubscriptionPlans = ({ plans }) => {
-  const { token } = useAuth(); // Get the token using the custom hook
+  const { token, user } = useAuth(); // Get the token and user info using the custom hook
   const router = useRouter();
 
   const handleSubscription = async (plan) => {
     try {
-      // Make a request to your Django backend to get the CoinPayments URL
+      // Prepare the data to be sent in the request body
+      const payload = {
+        amount: plan.price,             // Amount for the transaction
+        currency: plan.currency,        // The currency being used (e.g., USDC)
+        buyer_email: user.email,        // Use the dynamic buyer's email from the user object
+        subscription_plan: plan.category // Subscription plan name (e.g., 'platinum')
+      };
+
+      // Make a request to your Django backend to create the subscription
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create/${plan.category}/`,   // Adjust the API path to match your backend endpoint
-        {},
+        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create/${plan.category}/`, // Adjust the API path
+        payload, // Send the payload with dynamic data
         {
           headers: {
             Authorization: `Bearer ${token}`, // Send the token in the Authorization header
