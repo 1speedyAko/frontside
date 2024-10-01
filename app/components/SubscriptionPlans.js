@@ -5,6 +5,8 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth'; // Assuming this hook provides the JWT token
 
+
+
 const SubscriptionPlans = ({ plans }) => {
   const { token, user } = useAuth(); // Get the token and user info using the custom hook
   const router = useRouter();
