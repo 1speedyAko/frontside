@@ -19,7 +19,7 @@ export const useAuth = () => {
 
   const fetchUserData = async (token) => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/auth/users/me`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_DJANGO_API_URL}/users/auth/users/me/`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
