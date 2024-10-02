@@ -78,7 +78,7 @@ const SubscriptionPlans = ({ plans }) => {
             className="bg-indigo-600 text-white py-2 px-4 rounded-lg mt-4 inline-block"
             onClick={() => handleSubscription(plan)}
           >
-            Subscribe
+            Join now
           </button>
         </div>
       ))}

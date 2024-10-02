@@ -3,6 +3,8 @@
 import React from 'react';
 import Navbar from '../app/nav/page';
 import Body from './body/page';
+import './globals.css';
+
 
 
 const HomePage = () => {
