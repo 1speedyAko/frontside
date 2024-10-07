@@ -1,0 +1,32 @@
+{
+    "plans": [
+      {
+        "category": "Silver",
+        "price": 10,
+        "currency": "USDC",
+        "description": "Basic subscription plan.",
+        "info_1": "Access to basic content",
+        "info_2": "Limited features",
+        "discount": 1
+      },
+      {
+        "category": "Gold",
+        "price": 20,
+        "currency": "USDC",
+        "description": "Premium subscription plan.",
+        "info_1": "Access to all content",
+        "info_2": "Exclusive features",
+        "discount": 2
+      },
+      {
+        "category": "Platinum",
+        "price": 30,
+        "currency": "USDC",
+        "description": "Ultimate subscription plan.",
+        "info_1": "All benefits of Gold",
+        "info_2": "Priority support",
+        "discount": 3
+      }
+    ]
+  }
+  

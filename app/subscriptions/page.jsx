@@ -65,10 +65,17 @@ export default function SubscriptionPage() {
 
   // Render subscription plans
   return (
-    <div className="flex justify-center items-center min-h-screen bg-ebony">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+    // <div className="flex justify-center items-center min-h-screen bg-ebony">
+    //   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+    //     <SubscriptionPlans plans={plans} />
+    //   </div>
+    // </div>
+
+    <div>
+      <div>
         <SubscriptionPlans plans={plans} />
       </div>
     </div>
+    
   );
 }
