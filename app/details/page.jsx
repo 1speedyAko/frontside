@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation'; 
 import Spinner from '@/app/spinner/page'; 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FiCopy } from 'react-icons/fi'; 
 import { useAuth } from '../hooks/useAuth';  // Assuming you have an auth context for JWT token handling
 
-const PaymentDetails = () => {
+const PaymentDetailsComponent = () => {
   const searchParams = useSearchParams(); 
   const coin = searchParams.get('coin'); 
   const plan = searchParams.get('plan'); 
@@ -79,5 +79,11 @@ const PaymentDetails = () => {
     </div>
   );
 };
+
+const PaymentDetails = () => (
+  <Suspense fallback={<Spinner />}>
+    <PaymentDetailsComponent />
+  </Suspense>
+);
 
 export default PaymentDetails;
