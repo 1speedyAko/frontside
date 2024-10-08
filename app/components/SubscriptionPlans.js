@@ -49,6 +49,7 @@ const SubscriptionPlans = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
+        const token = localStorage.getItem('access')
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/plans/`, {
           headers: {
             Authorization: `Bearer ${token}`,
