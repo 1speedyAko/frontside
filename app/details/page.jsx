@@ -25,7 +25,7 @@ const PaymentDetailsComponent = () => {
   useEffect(() => {
     const fetchPaymentDetails = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/payment-details/?coin=${coin}&plan=${plan}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/create-subscription/?coin=${coin}&plan=${plan}`, {
           headers: {
             'Authorization': `Bearer ${token}`,  // Attach token for authenticated requests
           },
