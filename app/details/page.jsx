@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation'; 
+import { useSearchParams } from 'next/navigation';
 import Spinner from '@/app/spinner/page'; 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FiCopy } from 'react-icons/fi'; 
-import { useAuth } from '../hooks/useAuth';  // Assuming you have an auth context for JWT token handling
+import axios from 'axios';
+import { useAuth } from '../hooks/useAuth'; // Assuming you have an auth context for JWT token handling
 
 const PaymentDetailsComponent = () => {
   const searchParams = useSearchParams(); 
@@ -25,25 +26,24 @@ const PaymentDetailsComponent = () => {
   useEffect(() => {
     const fetchPaymentDetails = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_DJANGO_API_URL}/api/create-subscription/?coin=${coin}&plan=${plan}`, {
+        // Using Axios to fetch payment details
+        const token = localStorage.getItem('access')
+
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}subscriptions/create-subscription/${plan}/`, {
           headers: {
-            'Authorization': `Bearer ${token}`,  // Attach token for authenticated requests
+            Authorization: `Bearer ${token}`,  // Pass JWT for authentication
           },
+          params: { coin, price },  // Send coin and price as query parameters
         });
 
-        if (res.ok) {
-          const data = await res.json();
-          setPaymentData(data);
-        } else {
-          console.error('Failed to fetch payment details');
-        }
+        setPaymentData(res.data);
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching payment details:', error);
       }
     };
 
     fetchPaymentDetails();
-  }, [coin, plan, token]);
+  }, [coin, plan, price, token]);
 
   if (!paymentData) return <Spinner />;
 
@@ -55,6 +55,7 @@ const PaymentDetailsComponent = () => {
           <img src={paymentData.qr_code} alt="QR Code" className="w-32 h-32 mx-auto mb-4" />
           <h3 className="text-xl mb-2">{coin}</h3>
 
+          {/* Address Section */}
           <div className="mb-4">
             <p>Address: {paymentData.address}</p>
             <CopyToClipboard text={paymentData.address} onCopy={() => onCopyText('address')}>
@@ -65,6 +66,7 @@ const PaymentDetailsComponent = () => {
             {copyStatus.address && <p className="text-green-500 mt-2">Address copied!</p>}
           </div>
 
+          {/* Amount Section */}
           <div>
             <p>Amount: {paymentData.amount}</p>
             <CopyToClipboard text={paymentData.amount} onCopy={() => onCopyText('amount')}>
