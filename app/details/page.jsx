@@ -29,7 +29,7 @@ const PaymentDetailsComponent = () => {
         // Using Axios to fetch payment details
         const token = localStorage.getItem('access')
 
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/payments/create-subscription/${plan}/`, {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create-subscription/${plan}/`, {
           headers: {
             Authorization: `Bearer ${token}`,  // Pass JWT for authentication
           },
