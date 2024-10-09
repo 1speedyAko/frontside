@@ -68,28 +68,39 @@ const SubscriptionPlans = () => {
   }, [token]); // Fetch plans when token is available
 
   const handleJoinNow = (plan) => {
-    setSelectedPlan(plan); // Set the selected plan
-    setOpenDropdown(!openDropdown); // Toggle dropdown visibility
+    if (selectedPlan?.category === plan.category) {
+      setOpenDropdown(!openDropdown); // Toggle dropdown
+    } else {
+      setSelectedPlan(plan);
+      setOpenDropdown(true);
+    }
   };
-
-  const handleCoinSelection = (coin) => {
+  
+  const handleCoinSelection = async (coin) => {
+    console.log('Coin selected:', coin);
     setSelectedCoin(coin);
-    setOpenDropdown(false); // Close dropdown
-    router.push(`/details?plan=${selectedPlan.category}&coin=${coin}&price=${selectedPlan.price}`);
-    console.log(`Selected Plan: ${selectedPlan.category}, Coin: ${coin}`);
+    setOpenDropdown(false); // Close dropdown after coin selection
+  
+    // Ensure a plan is selected before proceeding with subscription
+    if (selectedPlan) {
+      // Trigger the subscription process after coin selection
+      await handleSubscription(selectedPlan, coin);
+    } else {
+      alert('Please select a subscription plan first.');
+    }
   };
-
-  const handleSubscription = async (plan) => {
+  
+  const handleSubscription = async (plan, coin) => {
     try {
       const payload = {
         amount: plan.price,
-        currency: selectedCoin || plan.currency,
+        currency: coin || plan.currency,
         buyer_email: user.email,
         subscription_plan: plan.category,
       };
-
+  
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create/${plan.category}/`, // Adjust API path
+        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create/${plan.category}/`,
         payload,
         {
           headers: {
@@ -98,9 +109,9 @@ const SubscriptionPlans = () => {
           },
         }
       );
-
+  
       if (response.data.payment_url) {
-        window.location.href = response.data.payment_url; // Redirect to payment URL
+        window.location.href = response.data.payment_url; // Redirect to CoinPayments URL
       } else {
         alert('Failed to initiate payment.');
       }
@@ -109,6 +120,8 @@ const SubscriptionPlans = () => {
       alert('An error occurred.');
     }
   };
+  
+  
 
   return (
     <div className="max-w-7xl mx-auto p-4 bg-ebony min-h-screen">
@@ -152,19 +165,20 @@ const SubscriptionPlans = () => {
 
       {/* Global Dropdown for Coin Selection */}
       {openDropdown && selectedPlan && (
-        <div className="bg-indigo-600 mt-6 rounded w-[200px] p-4 mx-auto">
-          <h3 className="text-xl text-white mb-2">Select Coin for {selectedPlan.category}</h3>
+      <div className="bg-indigo-600 mt-6 rounded w-[200px] p-4 mx-auto">
+        <h3 className="text-xl text-white mb-2">Select Coin for {selectedPlan.category}</h3>
           {coins.map((coin, index) => (
             <div
               key={index}
-              onClick={() => handleCoinSelection(coin)}
+              onClick={() => handleCoinSelection(coin)} // Trigger coin selection and payment
               className="cursor-pointer hover:bg-indigo-800 p-2 rounded transition-colors duration-200 mb-2 text-white"
             >
               {coin}
             </div>
-          ))}
-        </div>
-      )}
+        ))}
+      </div>
+)}
+
     </div>
   );
 };
