@@ -93,11 +93,13 @@ const SubscriptionPlans = () => {
   const handleSubscription = async (plan, coin) => {
     try {
       const payload = {
-        amount: plan.price,
-        currency: coin || plan.currency,
-        buyer_email: user.email,
-        subscription_plan: plan.category,
-      };
+        amount: plan.price,                      // Amount to charge, corresponds to 'price' in the backend
+        currency: coin || plan.currency,         // Currency for the transaction, corresponds to 'currency' in the backend
+        buyer_email: user.email,                 // Buyer's email
+        subscription_plan: plan.category,        // Name of the subscription plan, corresponds to 'plan_name' in the backend
+        duration_in_months: plan.duration_in_months // Optional, if needed
+    };
+    
   
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create-subscription/${plan.category}/`,
