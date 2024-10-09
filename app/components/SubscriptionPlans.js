@@ -100,7 +100,7 @@ const SubscriptionPlans = () => {
       };
   
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create/${plan.category}/`,
+        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create-subscription/${plan.category}/`,
         payload,
         {
           headers: {
