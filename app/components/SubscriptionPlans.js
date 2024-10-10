@@ -6,45 +6,13 @@ import axios from 'axios';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 import { useAuth } from '../hooks/useAuth'; // Assuming this hook provides the JWT token
 
-const fallbackPlans = [
-  {
-    category: 'Silver',
-    price: 10,
-    currency: 'USDC',
-    description: 'Basic subscription plan.',
-    info_1: 'Access to basic content',
-    info_2: 'Limited features',
-    discount: 1,
-  },
-  {
-    category: 'Gold',
-    price: 20,
-    currency: 'USDC',
-    description: 'Premium subscription plan.',
-    info_1: 'Access to all content',
-    info_2: 'Exclusive features',
-    discount: 2,
-  },
-  {
-    category: 'Platinum',
-    price: 30,
-    currency: 'USDC',
-    description: 'Ultimate subscription plan.',
-    info_1: 'All benefits of Gold',
-    info_2: 'Priority support',
-    discount: 3,
-  },
-];
-
 const SubscriptionPlans = () => {
   const { token, user } = useAuth(); // Get token and user from custom hook
   const [plans, setPlans] = useState([]); // Store subscription plans
   const [selectedPlan, setSelectedPlan] = useState(null); // Track selected plan
-  const [selectedCoin, setSelectedCoin] = useState(null); // Track selected coin
   const [openDropdown, setOpenDropdown] = useState(false); // Manage dropdown visibility
-  const router = useRouter();
 
-  const coins = ['USDC', 'LTC']; // Available coin options
+  const coins = ['USDC', 'USDT']; // Available coin options
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -59,8 +27,7 @@ const SubscriptionPlans = () => {
         setPlans(response.data); // Set plans from backend
       } catch (error) {
         console.error('Error fetching subscription plans:', error);
-        // Fallback to static plans if error occurs
-        setPlans(fallbackPlans);
+        alert('Could not load subscription plans.'); // Error handling
       }
     };
 
@@ -75,35 +42,25 @@ const SubscriptionPlans = () => {
       setOpenDropdown(true);
     }
   };
-  
+
   const handleCoinSelection = async (coin) => {
-    console.log('Coin selected:', coin);
-    setSelectedCoin(coin);
     setOpenDropdown(false); // Close dropdown after coin selection
-  
-    // Ensure a plan is selected before proceeding with subscription
+
     if (selectedPlan) {
-      // Trigger the subscription process after coin selection
       await handleSubscription(selectedPlan, coin);
     } else {
       alert('Please select a subscription plan first.');
     }
   };
-  
+
   const handleSubscription = async (plan, coin) => {
     try {
-      const payload = {
-        amount: plan.price,                      // Amount to charge, corresponds to 'price' in the backend
-        currency: coin || plan.currency,         // Currency for the transaction, corresponds to 'currency' in the backend
-        buyer_email: user.email,                 // Buyer's email
-        subscription_plan: plan.category,        // Name of the subscription plan, corresponds to 'plan_name' in the backend
-        duration_in_months: plan.duration_in_months // Optional, if needed
-    };
-    
-  
+      const token = localStorage.getItem('access')
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create-subscription/${plan.category}/`,
-        payload,
+        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create/${plan.category}/`, // Updated URL to match backend
+        {
+          currency: coin, // Send selected coin as currency
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -111,19 +68,17 @@ const SubscriptionPlans = () => {
           },
         }
       );
-  
+
       if (response.data.payment_url) {
-        window.location.href = response.data.payment_url; // Redirect to CoinPayments URL
+        window.location.href = response.data.payment_url; // Redirect to payment URL
       } else {
         alert('Failed to initiate payment.');
       }
     } catch (error) {
       console.error('Error initiating payment:', error);
-      alert('An error occurred.');
+      alert('An error occurred while initiating payment.');
     }
   };
-  
-  
 
   return (
     <div className="max-w-7xl mx-auto p-4 bg-ebony min-h-screen">
@@ -167,8 +122,8 @@ const SubscriptionPlans = () => {
 
       {/* Global Dropdown for Coin Selection */}
       {openDropdown && selectedPlan && (
-      <div className="bg-indigo-600 mt-6 rounded w-[200px] p-4 mx-auto">
-        <h3 className="text-xl text-white mb-2">Select Coin for {selectedPlan.category}</h3>
+        <div className="bg-indigo-600 mt-6 rounded w-[200px] p-4 mx-auto">
+          <h3 className="text-xl text-white mb-2">Select Coin for {selectedPlan.category}</h3>
           {coins.map((coin, index) => (
             <div
               key={index}
@@ -177,10 +132,9 @@ const SubscriptionPlans = () => {
             >
               {coin}
             </div>
-        ))}
-      </div>
-)}
-
+          ))}
+        </div>
+      )}
     </div>
   );
 };
